@@ -63,7 +63,7 @@
 <meta charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width, user-scalable=1, initial-scale=1.0">
-<title>ListTasks | Crea tu propia lista de tareas</title>
+<title>Bienvenido a ListTasks</title>
 <link href='http://fonts.googleapis.com/css?family=Exo+2'
 	rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/vendor/jquery-ui/all.css">
@@ -88,14 +88,14 @@
 		<nav class="cabecera-navegacion">
 			<ul class="cabecera-navegacion-lista">
 				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace" href="#"><%=usuarioStr%></a>
-				</li>
+					class="cabecera-navegacion-lista-item-enlace u-enlace"
+					href="ServicioPerfil"><%=usuarioStr%></a></li>
 				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace" href="#">Cerrar
-						Sesion</a></li>
+					class="cabecera-navegacion-lista-item-enlace u-enlace"
+					href="ServiceLogout">Cerrar Sesion</a></li>
 				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace" href="#">Soporte
-						Tecnico</a></li>
+					class="cabecera-navegacion-lista-item-enlace u-enlace"
+					href="ServiceSoporteTecnico">Soporte Tecnico</a></li>
 			</ul>
 		</nav>
 	</header>

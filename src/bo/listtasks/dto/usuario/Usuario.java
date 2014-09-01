@@ -4,6 +4,7 @@ public class Usuario extends Persona {
 	private int idUsuario;
 	private String codigoUsuario;
 	private String passwordUsuario;
+	private String email;
 
 	/**
 	 * @return the idUsuario
@@ -50,32 +51,27 @@ public class Usuario extends Persona {
 		this.passwordUsuario = passwordUsuario;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("UsuarioDto [");
-		if (super.toString() != null) {
-			builder.append("toString()=");
-			builder.append(super.toString());
-			builder.append(", ");
-		}
-		builder.append("idUsuario=");
+		builder.append("Usuario [toString()=");
+		builder.append(super.toString());
+		builder.append(", idUsuario=");
 		builder.append(idUsuario);
-		builder.append(", ");
-		if (codigoUsuario != null) {
-			builder.append("codigoUsuario=");
-			builder.append(codigoUsuario);
-			builder.append(", ");
-		}
-		if (passwordUsuario != null) {
-			builder.append("passwordUsuario=");
-			builder.append(passwordUsuario);
-		}
+		builder.append(", codigoUsuario=");
+		builder.append(codigoUsuario);
+		builder.append(", passwordUsuario=");
+		builder.append(passwordUsuario);
+		builder.append(", email=");
+		builder.append(email);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -1,4 +1,5 @@
 package bo.listtasks.dto.usuario;
+
 import java.util.Calendar;
 
 import bo.listtasks.constantes.ConstanteGral;
@@ -8,7 +9,6 @@ public class Persona {
 	private String segundoNombre;
 	private String paterno;
 	private String materno;
-	private String email;
 	private int telefono;
 	private int idCiudad;
 	private int idPais;
@@ -73,21 +73,6 @@ public class Persona {
 	 */
 	public void setMaterno(String materno) {
 		this.materno = materno;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	/**
@@ -186,8 +171,6 @@ public class Persona {
 		builder.append(paterno);
 		builder.append(", materno=");
 		builder.append(materno);
-		builder.append(", email=");
-		builder.append(email);
 		builder.append(", telefono=");
 		builder.append(telefono);
 		builder.append(", idCiudad=");

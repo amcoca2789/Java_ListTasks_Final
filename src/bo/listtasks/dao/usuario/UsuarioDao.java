@@ -10,8 +10,10 @@ import java.util.Date;
 import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteNombreTabla;
 import bo.listtasks.constantes.ConstanteQueriesDB;
+import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.dao.util.ConexionBD;
 import bo.listtasks.dao.util.ConfiguracionDB;
+import bo.listtasks.dao.util.UtilDao;
 import bo.listtasks.dto.ubicacion.Ciudad;
 import bo.listtasks.dto.usuario.Usuario;
 import bo.listtasks.util.UtilBO;
@@ -33,6 +35,10 @@ public class UsuarioDao {
 		if (conexion != null) {
 			String nombreTabla = ConstanteNombreTabla.USUARIO;
 			String nombreEsquemaDB = cnxBD.getNameBD();
+
+			UtilDao utilDao = new UtilDao();
+			String sqlSelectUsuario = ConstanteQueriesDB.SELECT;
+
 			String codigo = ConstanteGral.CADENA_VACIA;
 			String password = ConstanteGral.CADENA_VACIA;
 			if (u != null) {
@@ -40,18 +46,43 @@ public class UsuarioDao {
 				password = "'" + u.getPasswordUsuario() + "'";
 			}
 
-			String[] datos = { nombreEsquemaDB, nombreTabla, codigo, password };
+			String[] datosSelectUsuario = { nombreEsquemaDB, nombreTabla };
+			String querySelect = UtilBO.cambioValores(sqlSelectUsuario,
+					datosSelectUsuario);
+			String[] datosSelect = { codigo, password };
 
-			String query = UtilBO.cambioValores(ConstanteQueriesDB.USER_VALIDO,
-					datos);
+			String[] columnasSelectUsuario = utilDao
+					.getNamesColumnsTable(querySelect);
 
-			System.out.println("QUERY: " + query);
+			// Eliminando algunos campos
+			String[] columnasSelectUsuarioNuevo = null;
+			if (columnasSelectUsuario != null
+					&& columnasSelectUsuario.length > 0) {
+
+				UtilBO utilBo = new UtilBO();
+				String[] elementosAEliminar = { ConstanteUsuario.IDUSUARIO,
+						ConstanteUsuario.EMAIL };
+				columnasSelectUsuarioNuevo = utilBo.eliminarElementosArreglo(
+						columnasSelectUsuario, elementosAEliminar);
+			}
+
+			String whereUsuario = utilDao.construirWhere(
+					columnasSelectUsuarioNuevo, datosSelect);
+
+			System.out.println("whereUsuario:" + whereUsuario);
+
+			String[] datos = { nombreEsquemaDB, nombreTabla, whereUsuario };
+
+			String querySelectRest = UtilBO.cambioValores(
+					ConstanteQueriesDB.SELECT_RESTRINGIDO, datos);
+
+			System.out.println("QUERY: " + querySelectRest);
 
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
 			try {
-				ps = conexion.prepareStatement(query);
+				ps = conexion.prepareStatement(querySelectRest);
 				rs = ps.executeQuery();
 
 				if (!rs.next()) {
@@ -173,23 +204,52 @@ public class UsuarioDao {
 			String nombreEsquemaDB = cnxBD.getNameBD();
 			String codigo = ConstanteGral.CADENA_VACIA;
 			String password = ConstanteGral.CADENA_VACIA;
+			String email = ConstanteGral.CADENA_VACIA;
 			if (u != null) {
 				codigo = "'" + u.getCodigoUsuario() + "'";
 				password = "'" + u.getPasswordUsuario() + "'";
+				email = "'" + u.getEmail() + "'";
 			}
 
-			String[] datos = { nombreEsquemaDB, nombreTabla, codigo, password };
+			String sqlSelectUsuario = ConstanteQueriesDB.SELECT;
+			String[] datosSelectUsuario = { nombreEsquemaDB, nombreTabla };
+			String querySelect = UtilBO.cambioValores(sqlSelectUsuario,
+					datosSelectUsuario);
+			String[] datosSelect = { codigo, password, email };
 
-			String query = UtilBO.cambioValores(ConstanteQueriesDB.USER_VALIDO,
-					datos);
+			UtilDao utilDao = new UtilDao();
+			String[] columnasSelectUsuario = utilDao
+					.getNamesColumnsTable(querySelect);
 
-			System.out.println("QUERY: " + query);
+			// Eliminando algunos campos
+			String[] columnasSelectUsuarioNuevo = null;
+			if (columnasSelectUsuario != null
+					&& columnasSelectUsuario.length > 0) {
+
+				UtilBO utilBo = new UtilBO();
+				String[] elementosAEliminar = { ConstanteUsuario.IDUSUARIO,
+						ConstanteUsuario.EMAIL };
+				columnasSelectUsuarioNuevo = utilBo.eliminarElementosArreglo(
+						columnasSelectUsuario, elementosAEliminar);
+			}
+
+			String whereUsuario = utilDao.construirWhere(
+					columnasSelectUsuarioNuevo, datosSelect);
+
+			System.out.println("whereUsuario:" + whereUsuario);
+
+			String[] datos = { nombreEsquemaDB, nombreTabla, whereUsuario };
+
+			String querySelectRest = UtilBO.cambioValores(
+					ConstanteQueriesDB.SELECT_RESTRINGIDO, datos);
+
+			System.out.println("QUERY: " + querySelectRest);
 
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
 			try {
-				ps = conexion.prepareStatement(query);
+				ps = conexion.prepareStatement(querySelectRest);
 				rs = ps.executeQuery();
 
 				if (!rs.next()) {
@@ -216,8 +276,80 @@ public class UsuarioDao {
 		return true;
 	}
 
-	public boolean nuevoUsuario(Usuario u) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean nuevoUsuario(Usuario u) throws SQLException {
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+			UtilDao utilDao = new UtilDao();
+			String nombreTabla = ConstanteNombreTabla.USUARIO;
+			String nombreEsquemaDB = cnxBD.getNameBD();
+			String codigo = ConstanteGral.CADENA_VACIA;
+			String password = ConstanteGral.CADENA_VACIA;
+			String email = ConstanteGral.CADENA_VACIA;
+
+			String[] datosSelect = { nombreEsquemaDB, nombreTabla };
+
+			String querySelect = UtilBO.cambioValores(
+					ConstanteQueriesDB.SELECT, datosSelect);
+
+			String[] nombresColumnasArr = utilDao
+					.getNamesColumnsTable(querySelect);
+
+			String nombresColumnas = UtilBO
+					.convertStringToArrayComas(nombresColumnasArr);
+
+			String[] valoresUsuarioArr = new String[3];
+
+			if (u != null) {
+				codigo = "'" + u.getCodigoUsuario() + "'";
+				password = "'" + u.getPasswordUsuario() + "'";
+				email = "'" + u.getEmail() + "'";
+			}
+
+			valoresUsuarioArr[0] = codigo;
+			valoresUsuarioArr[1] = password;
+			valoresUsuarioArr[2] = email;
+
+			String valoresUsuario = UtilBO
+					.convertStringToArrayComas(valoresUsuarioArr);
+
+			String[] datos = { nombreEsquemaDB, nombreTabla, nombresColumnas,
+					valoresUsuario };
+
+			String queryInsert = UtilBO.cambioValores(
+					ConstanteQueriesDB.INSERT, datos);
+
+			System.out.println("QUERY: " + queryInsert);
+
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+
+			try {
+				ps = conexion.prepareStatement(queryInsert);
+				rs = ps.executeQuery();
+
+				if (!rs.next()) {
+					return true;
+				}
+				return false;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (ps != null) {
+					ps.close();
+				}
+				if (rs != null) {
+					rs.close();
+				}
+				if (conexion != null) {
+					System.out.println("Cerrando Conexion...");
+					conexion.close();
+				}
+			}
+		}
+
+		return true;
 	}
 }

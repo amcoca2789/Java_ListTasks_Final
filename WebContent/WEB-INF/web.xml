@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>Java_ListTasks_Final</display-name>
-  <servlet>
-    <servlet-name>Login</servlet-name>
-    <servlet-class>bo.listtasks.services.usuario.ServicioLogin</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Login</servlet-name>
-    <url-pattern>/ServiceLogin</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>SignUp</servlet-name>
-    <servlet-class>bo.listtasks.services.usuario.ServicioSignUp</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SignUp</servlet-name>
-    <url-pattern>/ServiceSignUp</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>Task</servlet-name>
-    <servlet-class>bo.listtasks.services.tarea.ServicioTask</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Task</servlet-name>
-    <url-pattern>/ServiceTask</url-pattern>
-  </servlet-mapping>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Java_ListTasks_Final</display-name>
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>bo.listtasks.services.usuario.ServicioLogin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/ServiceLogin</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>bo.listtasks.services.usuario.ServicioLogout</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/ServiceLogout</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>SignUp</servlet-name>
+		<servlet-class>bo.listtasks.services.usuario.ServicioSignUp</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SignUp</servlet-name>
+		<url-pattern>/ServiceSignUp</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Task</servlet-name>
+		<servlet-class>bo.listtasks.services.tarea.ServicioTask</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Task</servlet-name>
+		<url-pattern>/ServiceTask</url-pattern>
+	</servlet-mapping>
 </web-app>

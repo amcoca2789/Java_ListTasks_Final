@@ -44,8 +44,8 @@ public class TareaDao {
 			String sqlSelectTask = UtilBO.cambioValores(
 					ConstanteQueriesDB.SELECT_RESTRINGIDO, datosSelectTask);
 
-			String[] namesColumnasTask = utilDao.getNamesColumnsTable(
-					datosSelectTask, sqlSelectTask);
+			String[] namesColumnasTask = utilDao
+					.getNamesColumnsTable(sqlSelectTask);
 
 			/*
 			 * Debido a que la primera posicion es su identificador, se debe
@@ -53,8 +53,9 @@ public class TareaDao {
 			 * columna
 			 */
 
+			UtilBO utilBo = new UtilBO();
 			String nombreColumnaAEliminar = ConstanteNombreTabla.ID_TABLA_TAREA;
-			namesColumnasTask = UtilBO.eliminarElementoArreglo(
+			namesColumnasTask = utilBo.eliminarElementoArreglo(
 					nombreColumnaAEliminar, namesColumnasTask);
 			String auxNamesColumnas = Arrays.toString(namesColumnasTask);
 			String namesColumnas = auxNamesColumnas.replace("[", "(");

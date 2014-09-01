@@ -112,8 +112,7 @@ public class UtilBO {
 		return salida;
 	}
 
-	public static String[] eliminarElementoArreglo(String elemento,
-			String[] arreglo) {
+	public String[] eliminarElementoArreglo(String elemento, String[] arreglo) {
 
 		List<String> lista = new ArrayList<String>();
 
@@ -136,6 +135,28 @@ public class UtilBO {
 
 	}
 
+	public String[] eliminarElementosArreglo(String[] arregloDatos,
+			String[] arregloElementosAEliminar) {
+
+		if (arregloDatos != null) {
+			if (arregloElementosAEliminar != null) {
+
+				int nroColumnas = arregloDatos.length;
+				int nroElementosAEliminar = arregloElementosAEliminar.length;
+
+				if (nroColumnas >= nroElementosAEliminar) {
+
+					for (String elemento : arregloElementosAEliminar) {
+						arregloDatos = this.eliminarElementoArreglo(elemento,
+								arregloDatos);
+					}
+
+				}
+			}
+		}
+		return arregloDatos;
+	}
+
 	public static Date convertStringToDate(String fecha) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat(
@@ -150,4 +171,5 @@ public class UtilBO {
 
 		return fechaParseada;
 	}
+
 }

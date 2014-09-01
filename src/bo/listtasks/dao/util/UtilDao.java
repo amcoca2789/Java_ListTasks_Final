@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+
+import bo.listtasks.constantes.ConstanteGral;
 
 public class UtilDao extends ConfiguracionDB {
 
@@ -59,8 +62,7 @@ public class UtilDao extends ConfiguracionDB {
 
 	}
 
-	public String[] getNamesColumnsTable(String[] datosSelectTask,
-			String sqlSelectTask) throws SQLException {
+	public String[] getNamesColumnsTable(String sqlSelect) throws SQLException {
 
 		ConexionBD cnxBD = configDB.obtenerConexionConectada();
 		Connection conexion = cnxBD.getConexion();
@@ -74,7 +76,7 @@ public class UtilDao extends ConfiguracionDB {
 
 			if (conexion != null) {
 				st = conexion.createStatement();
-				rs = st.executeQuery(sqlSelectTask);
+				rs = st.executeQuery(sqlSelect);
 				ResultSetMetaData md = rs.getMetaData();
 
 				if (md != null) {
@@ -111,4 +113,38 @@ public class UtilDao extends ConfiguracionDB {
 		return namesColumnasTask;
 	}
 
+	public String construirWhere(String[] columnas, String[] datos) {
+
+		StringBuffer where = new StringBuffer();
+
+		int nroColumnas = 0;
+		int nroDatos = 0;
+
+		if (columnas != null && datos != null) {
+			nroColumnas = columnas.length;
+			nroDatos = datos.length;
+		}
+
+		if (nroColumnas == nroDatos) {
+
+			for (int i = 0; i < datos.length; i++) {
+				where.append(columnas[i] + "= " + datos[i]);
+				where.append(ConstanteGral.ESPACIO_EN_BLANCO);
+
+				if (i != datos.length - 1) {
+					where.append(" AND ");
+				}
+			}
+
+		} else {
+			System.out
+					.println("el numero de elementos de los arreglos son DISTINTOS");
+			System.out.println("#Columnas:" + nroColumnas);
+			System.out.println("Columnas[]:" + Arrays.toString(columnas));
+			System.out.println("#Datos:" + nroDatos);
+			System.out.println("Datos[]:" + Arrays.toString(datos));
+		}
+
+		return where.toString();
+	}
 }

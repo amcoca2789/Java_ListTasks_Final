@@ -163,4 +163,61 @@ public class UsuarioDao {
 
 		return u;
 	}
+
+	public boolean isExisteUsuario(Usuario u) throws SQLException {
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+			String nombreTabla = ConstanteNombreTabla.USUARIO;
+			String nombreEsquemaDB = cnxBD.getNameBD();
+			String codigo = ConstanteGral.CADENA_VACIA;
+			String password = ConstanteGral.CADENA_VACIA;
+			if (u != null) {
+				codigo = "'" + u.getCodigoUsuario() + "'";
+				password = "'" + u.getPasswordUsuario() + "'";
+			}
+
+			String[] datos = { nombreEsquemaDB, nombreTabla, codigo, password };
+
+			String query = UtilBO.cambioValores(ConstanteQueriesDB.USER_VALIDO,
+					datos);
+
+			System.out.println("QUERY: " + query);
+
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+
+			try {
+				ps = conexion.prepareStatement(query);
+				rs = ps.executeQuery();
+
+				if (!rs.next()) {
+					return true;
+				}
+				return false;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (ps != null) {
+					ps.close();
+				}
+				if (rs != null) {
+					rs.close();
+				}
+				if (conexion != null) {
+					System.out.println("Cerrando Conexion...");
+					conexion.close();
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public boolean nuevoUsuario(Usuario u) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

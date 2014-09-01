@@ -64,12 +64,12 @@ public class ServicioLogin extends HttpServlet {
 
 			if (isUserValido) {
 				System.out.println("Usuario valido...");
-				url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
 
 				HttpSession session = request.getSession(true);
 
 				if (session != null) {
-
+					url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
+					System.out.println("Inicio Sesion...");
 					final String idSesionUser = session.getId();
 
 					session.setAttribute(ConstanteGral.ID_SESION_USUARIO,
@@ -82,6 +82,8 @@ public class ServicioLogin extends HttpServlet {
 					System.out.println("Eliminada/Cerrada: "
 							+ new Date(session.getLastAccessedTime()));
 					System.out.println("Id Sesion: " + session.getId());
+				} else {
+					System.out.println("No se pudo iniciar sesion...");
 				}
 
 			} else {

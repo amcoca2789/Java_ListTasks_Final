@@ -1,6 +1,8 @@
 package bo.listtasks.dto.usuario;
 
-public class Usuario extends Persona {
+import bo.listtasks.constantes.ConstanteGral;
+
+public class Usuario {
 	private int idUsuario;
 	private String codigoUsuario;
 	private String passwordUsuario;
@@ -62,9 +64,7 @@ public class Usuario extends Persona {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Usuario [toString()=");
-		builder.append(super.toString());
-		builder.append(", idUsuario=");
+		builder.append("Usuario [idUsuario=");
 		builder.append(idUsuario);
 		builder.append(", codigoUsuario=");
 		builder.append(codigoUsuario);
@@ -74,6 +74,17 @@ public class Usuario extends Persona {
 		builder.append(email);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public boolean isVacio() {
+		if (this.codigoUsuario != null && this.passwordUsuario != null
+				&& this.email != null
+				&& !ConstanteGral.CADENA_VACIA.equals(this.codigoUsuario)
+				&& !ConstanteGral.CADENA_VACIA.equals(this.passwordUsuario)
+				&& !ConstanteGral.CADENA_VACIA.equals(this.email)) {
+			return false;
+		}
+		return true;
 	}
 
 }

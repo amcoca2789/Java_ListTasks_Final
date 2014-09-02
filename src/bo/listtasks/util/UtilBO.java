@@ -44,8 +44,11 @@ public class UtilBO {
 	public static String convertStringToArrayComas(String[] columnas) {
 		String nombresColumnas = ConstanteGral.CADENA_VACIA;
 
-		for (String nombre : columnas) {
-			nombresColumnas += nombre + ",";
+		for (int i = 0; i < columnas.length; i++) {
+			nombresColumnas += columnas[i];
+			if (i != columnas.length - 1) {
+				nombresColumnas += ", ";
+			}
 		}
 
 		return nombresColumnas;
@@ -172,4 +175,21 @@ public class UtilBO {
 		return fechaParseada;
 	}
 
+	public static String[] convertirDatosADatosSQL(String[] tipoDatos,
+			String[] datos) {
+
+		if (datos != null && datos.length > 0 && tipoDatos != null
+				&& tipoDatos.length > 0 && datos.length == tipoDatos.length) {
+
+			for (int i = 0; i < tipoDatos.length; i++) {
+				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
+					datos[i] = "'" + datos[i] + "'";
+				}
+			}
+		} else {
+			System.out.println("No se puedo realizar ninguna conversion");
+		}
+
+		return datos;
+	}
 }

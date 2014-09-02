@@ -44,30 +44,5 @@ public class ServicioTarea extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		String url_destino = "dashboard.jsp";
-
-		try {
-			String descripcionTarea = null;
-			Calendar fechaRealizacionTarea = Calendar.getInstance();
-
-			Tarea t = new Tarea();
-
-			t.setDescripcionTarea(descripcionTarea);
-			t.setFechaRealizacionTarea(fechaRealizacionTarea);
-			t.setEtapaTarea(ConstanteGral.SIN_DESARROLLAR);
-			t.setEstadoRegistro(ConstanteGral.ACTIVADO);
-
-			System.out.println("Service:T=" + t);
-
-			TareaDao tDao = new TareaDao();
-			tDao.insertTask(t);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher(url_destino);
-			dispatcher.forward(request, response);
-		}
 	}
 }

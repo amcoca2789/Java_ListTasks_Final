@@ -113,7 +113,8 @@ public class UtilDao extends ConfiguracionDB {
 		return namesColumnasTask;
 	}
 
-	public String construirWhere(String[] columnas, String[] datos) {
+	public String construirWhere(String[] columnas, String[] datos,
+			String operadorLogicoSQL) {
 
 		StringBuffer where = new StringBuffer();
 
@@ -126,25 +127,88 @@ public class UtilDao extends ConfiguracionDB {
 		}
 
 		if (nroColumnas == nroDatos) {
-
+			where.append(" WHERE ");
 			for (int i = 0; i < datos.length; i++) {
 				where.append(columnas[i] + "= " + datos[i]);
 				where.append(ConstanteGral.ESPACIO_EN_BLANCO);
 
 				if (i != datos.length - 1) {
-					where.append(" AND ");
+					where.append(operadorLogicoSQL);
 				}
 			}
 
 		} else {
 			System.out
 					.println("el numero de elementos de los arreglos son DISTINTOS");
-			System.out.println("#Columnas:" + nroColumnas);
-			System.out.println("Columnas[]:" + Arrays.toString(columnas));
-			System.out.println("#Datos:" + nroDatos);
-			System.out.println("Datos[]:" + Arrays.toString(datos));
 		}
 
 		return where.toString();
 	}
+
+	public String[] obtenerTiposDatosColumnaTabla(String querySelect)
+			throws SQLException {
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		String[] tipoDatoColumnas = null;
+
+		Statement st = null;
+		ResultSet rs = null;
+
+		try {
+
+			if (conexion != null) {
+				st = conexion.createStatement();
+				rs = st.executeQuery(querySelect);
+				ResultSetMetaData md = rs.getMetaData();
+
+				if (md != null) {
+					int nroCol = md.getColumnCount();
+
+					tipoDatoColumnas = new String[nroCol];
+
+					int posicion = 0;
+					for (int i = 1; i <= nroCol; i++) {
+						final String col_name = md.getColumnTypeName(i);
+						tipoDatoColumnas[posicion] = col_name;
+						posicion++;
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (st != null) {
+				st.close();
+			}
+
+			if (rs != null) {
+				rs.close();
+			}
+
+			if (conexion != null) {
+				System.out.println("Cerrando Conexion...");
+				conexion.close();
+			}
+		}
+
+		return tipoDatoColumnas;
+	}
+
+	public static void main(String[] args) {
+		UtilDao uDao = new UtilDao();
+		String sqlSelect = "SELECT * FROM MYTODO.USUARIO";
+		try {
+			String[] resultado = uDao.obtenerTiposDatosColumnaTabla(sqlSelect);
+
+			for (String elemento : resultado) {
+				System.out.println(elemento);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

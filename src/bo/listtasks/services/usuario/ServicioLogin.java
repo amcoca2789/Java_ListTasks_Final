@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bo.listtasks.constantes.ConstanteGral;
+import bo.listtasks.constantes.ConstanteNombreTabla;
+import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.constantes.ConstantesRutasServlet;
 import bo.listtasks.dao.usuario.UsuarioDao;
 import bo.listtasks.dto.usuario.Usuario;
@@ -59,10 +61,23 @@ public class ServicioLogin extends HttpServlet {
 			u.setCodigoUsuario(codigoUsuario);
 			u.setPasswordUsuario(passwordUsuario);
 
-			UsuarioDao udao = new UsuarioDao();
-			boolean isUserValido = udao.isUsuarioValido(u);
+			System.out.println("USUARIO:" + u);
 
-			if (isUserValido) {
+			String[] columnasAConsultar = { ConstanteUsuario.CODIGO,
+					ConstanteUsuario.PASSWORD };
+			String[] datosUsuario = { codigoUsuario, passwordUsuario };
+			String[] tipoDatos = { ConstanteGral.TIPO_VARCHAR2,
+					ConstanteGral.TIPO_VARCHAR2 };
+
+			String nombreTabla = ConstanteNombreTabla.USUARIO;
+
+			UsuarioDao udao = new UsuarioDao();
+			String operadorLogicoSQL = ConstanteGral.OPERADOR_AND;
+			boolean isExisteUsuario = udao.isExisteRegistro(nombreTabla,
+					columnasAConsultar, tipoDatos, datosUsuario,
+					operadorLogicoSQL);
+
+			if (isExisteUsuario) {
 				System.out.println("Usuario valido...");
 
 				HttpSession session = request.getSession(true);

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bo.listtasks.constantes.ConstanteGral;
+import bo.listtasks.constantes.ConstanteNombreTabla;
+import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.constantes.ConstantesRutasServlet;
 import bo.listtasks.dao.usuario.UsuarioDao;
 import bo.listtasks.dto.usuario.Usuario;
@@ -45,7 +47,8 @@ public class ServicioSignUp extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("--------------ServicioLogin:doPost--------------");
+
+		System.out.println("--------------ServicioSignup:doPost--------------");
 
 		String url_destino = ConstantesRutasServlet.RUTA_LOGIN;
 
@@ -61,41 +64,65 @@ public class ServicioSignUp extends HttpServlet {
 			u.setPasswordUsuario(passwordUsuario);
 			u.setEmail(emailUsuario);
 
-			UsuarioDao udao = new UsuarioDao();
-			boolean isExisteUsuario = udao.isExisteUsuario(u);
+			UsuarioDao userDao = new UsuarioDao();
+			String nombreTabla = ConstanteNombreTabla.USUARIO;
+			String operadorLogicoSQL = ConstanteGral.OPERADOR_AND;
 
-			if (isExisteUsuario) {
-				System.out
-						.println("Usuario no existe, se procede con el registro...");
+			String[] columnasAConsultarForCodigo = { ConstanteUsuario.CODIGO };
+			String[] tipoDatosForCodigo = { ConstanteGral.TIPO_VARCHAR2 };
+			String[] datosUsuarioForCodigo = { codigoUsuario };
 
-				boolean isRegistrado = udao.nuevoUsuario(u);
+			boolean isExisteForCodigoUsuario = userDao.isExisteRegistro(
+					nombreTabla, columnasAConsultarForCodigo,
+					tipoDatosForCodigo, datosUsuarioForCodigo,
+					operadorLogicoSQL);
 
-				if (isRegistrado) {
-					url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
+			String[] columnasAConsultarForEmail = { ConstanteUsuario.EMAIL };
+			String[] tipoDatosForEmail = { ConstanteGral.TIPO_VARCHAR2 };
+			String[] datosUsuarioForEmail = { emailUsuario };
+
+			boolean isExisteForEmailUsuario = userDao.isExisteRegistro(
+					nombreTabla, columnasAConsultarForEmail, tipoDatosForEmail,
+					datosUsuarioForEmail, operadorLogicoSQL);
+
+			if (!isExisteForCodigoUsuario) {
+				if (!isExisteForEmailUsuario) {
+
+					boolean isAdicionado = userDao.adicionUsuario(u);
 
 					HttpSession session = request.getSession(true);
 
-					if (session != null) {
-						System.out.println("Inicio Sesion...");
-						final String idSesionUser = session.getId();
+					if (isAdicionado) {
+						if (session != null) {
+							url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
+							System.out.println("Inicio Sesion...");
+							final String idSesionUser = session.getId();
 
-						session.setAttribute(ConstanteGral.ID_SESION_USUARIO,
-								idSesionUser);
-						session.setAttribute(ConstanteGral.SESION_USUARIO, u);
-						session.setMaxInactiveInterval(30 * 60); // 30min
+							session.setAttribute(
+									ConstanteGral.ID_SESION_USUARIO,
+									idSesionUser);
+							session.setAttribute(ConstanteGral.SESION_USUARIO,
+									u);
+							session.setMaxInactiveInterval(30 * 60); // 30min
 
-						System.out.println("Creada: "
-								+ new Date(session.getCreationTime()));
-						System.out.println("Eliminada/Cerrada: "
-								+ new Date(session.getLastAccessedTime()));
-						System.out.println("Id Sesion: " + session.getId());
-					}else{
-						System.out.println("No se pudo iniciar sesion...");
+							System.out.println("Creada: "
+									+ new Date(session.getCreationTime()));
+							System.out.println("Eliminada/Cerrada: "
+									+ new Date(session.getLastAccessedTime()));
+							System.out.println("Id Sesion: " + session.getId());
+						} else {
+							System.out.println("No se pudo iniciar sesion...");
+						}
+
+					} else {
+						System.out.println("No se pudo adicionar el usuario..");
 					}
-				}
 
+				} else {
+					System.out.println("EMAIL REPETIDO:" + emailUsuario);
+				}
 			} else {
-				System.out.println("Usuario ya existe...");
+				System.out.println("CODIGO USUARIO REPETIDO:" + codigoUsuario);
 			}
 
 		} catch (SQLException e) {

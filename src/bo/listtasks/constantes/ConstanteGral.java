@@ -11,5 +11,10 @@ public class ConstanteGral {
 	public static final String SESION_USUARIO = "usuario_sesion";
 	public static final String SIN_DATOS = "-SIN DATOS-";
 	public static final String ID_SESION_USUARIO = "id-usuario";
+	public static final String TIPO_NUMBER = "NUMBER";
+	public static final String TIPO_VARCHAR2 = "VARCHAR2";
+	public static final String TIPO_DATE = "DATE";
+	public static final String OPERADOR_AND = " AND ";
+	public static final String OPERADOR_OR = " OR ";
 
 }

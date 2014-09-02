@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 
 import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteNombreTabla;
@@ -14,7 +12,6 @@ import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.dao.util.ConexionBD;
 import bo.listtasks.dao.util.ConfiguracionDB;
 import bo.listtasks.dao.util.UtilDao;
-import bo.listtasks.dto.ubicacion.Ciudad;
 import bo.listtasks.dto.usuario.Usuario;
 import bo.listtasks.util.UtilBO;
 
@@ -27,68 +24,57 @@ public class UsuarioDao {
 		configDB.establecerDatosConexion();
 	}
 
-	public boolean isUsuarioValido(Usuario u) throws SQLException {
+	public boolean isExisteRegistro(String nombreTabla,
+			String[] columnasAConsultar, String[] tipoDatos,
+			String[] datosAUtilizar, String operadorLogicoSQL)
+			throws SQLException {
 
 		ConexionBD cnxBD = configDB.obtenerConexionConectada();
 		Connection conexion = cnxBD.getConexion();
 
 		if (conexion != null) {
-			String nombreTabla = ConstanteNombreTabla.USUARIO;
 			String nombreEsquemaDB = cnxBD.getNameBD();
 
+			String querySelect = ConstanteGral.CADENA_VACIA;
+			String queryDefault = ConstanteQueriesDB.SELECT;
+
+			String where = ConstanteGral.CADENA_VACIA;
+
+			String[] datosQuery = new String[3];
+			datosQuery[0] = nombreEsquemaDB;
+			datosQuery[1] = nombreTabla;
+			datosQuery[2] = where;
+
+			querySelect = UtilBO.cambioValores(queryDefault, datosQuery);
+
 			UtilDao utilDao = new UtilDao();
-			String sqlSelectUsuario = ConstanteQueriesDB.SELECT;
+			String[] datosAUtilizarConvertidos = UtilBO
+					.convertirDatosADatosSQL(tipoDatos, datosAUtilizar);
 
-			String codigo = ConstanteGral.CADENA_VACIA;
-			String password = ConstanteGral.CADENA_VACIA;
-			if (u != null) {
-				codigo = "'" + u.getCodigoUsuario() + "'";
-				password = "'" + u.getPasswordUsuario() + "'";
-			}
+			queryDefault = ConstanteQueriesDB.SELECT_RESTRINGIDO;
 
-			String[] datosSelectUsuario = { nombreEsquemaDB, nombreTabla };
-			String querySelect = UtilBO.cambioValores(sqlSelectUsuario,
-					datosSelectUsuario);
-			String[] datosSelect = { codigo, password };
+			// Construccion del where
+			where = utilDao.construirWhere(columnasAConsultar,
+					datosAUtilizarConvertidos, operadorLogicoSQL);
 
-			String[] columnasSelectUsuario = utilDao
-					.getNamesColumnsTable(querySelect);
+			datosQuery[0] = nombreEsquemaDB;
+			datosQuery[1] = nombreTabla;
+			datosQuery[2] = where;
+			querySelect = UtilBO.cambioValores(queryDefault, datosQuery);
 
-			// Eliminando algunos campos
-			String[] columnasSelectUsuarioNuevo = null;
-			if (columnasSelectUsuario != null
-					&& columnasSelectUsuario.length > 0) {
-
-				UtilBO utilBo = new UtilBO();
-				String[] elementosAEliminar = { ConstanteUsuario.IDUSUARIO,
-						ConstanteUsuario.EMAIL };
-				columnasSelectUsuarioNuevo = utilBo.eliminarElementosArreglo(
-						columnasSelectUsuario, elementosAEliminar);
-			}
-
-			String whereUsuario = utilDao.construirWhere(
-					columnasSelectUsuarioNuevo, datosSelect);
-
-			System.out.println("whereUsuario:" + whereUsuario);
-
-			String[] datos = { nombreEsquemaDB, nombreTabla, whereUsuario };
-
-			String querySelectRest = UtilBO.cambioValores(
-					ConstanteQueriesDB.SELECT_RESTRINGIDO, datos);
-
-			System.out.println("QUERY: " + querySelectRest);
+			System.out.println("querySelect:" + querySelect);
 
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
 			try {
-				ps = conexion.prepareStatement(querySelectRest);
+				ps = conexion.prepareStatement(querySelect);
 				rs = ps.executeQuery();
 
-				if (!rs.next()) {
-					return false;
+				if (rs.next()) {
+					return true;
 				}
-				return true;
+				return false;
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -109,247 +95,83 @@ public class UsuarioDao {
 		return false;
 	}
 
-	public Usuario obtenerDatosUsuario(String codigoUsuario,
-			String passwordUsuario) throws SQLException {
+	public boolean adicionUsuario(Usuario u) throws SQLException {
 
-		Usuario u = new Usuario();
-
-		if (codigoUsuario != null && passwordUsuario != null
-				&& !ConstanteGral.CADENA_VACIA.equals(codigoUsuario)
-				&& !ConstanteGral.CADENA_VACIA.equals(passwordUsuario)) {
-
-			ConexionBD cnxBD = configDB.obtenerConexionConectada();
-			Connection conexion = cnxBD.getConexion();
-
-			if (conexion != null) {
-				String nombreTabla = ConstanteNombreTabla.USUARIO;
-				String nombreEsquemaDB = cnxBD.getNameBD();
-
-				String[] datos = { nombreEsquemaDB, nombreTabla,
-						"'" + codigoUsuario + "'", "'" + passwordUsuario + "'" };
-
-				String query = UtilBO.cambioValores(
-						ConstanteQueriesDB.USER_VALIDO, datos);
-
-				System.out.println("QUERY: " + query);
-
-				PreparedStatement ps = null;
-				ResultSet rs = null;
-
-				try {
-					ps = conexion.prepareStatement(query);
-					rs = ps.executeQuery();
-
-					while (rs.next()) {
-
-						Ciudad ciudad = new Ciudad();
-						Calendar fechaNacimiento = Calendar.getInstance();
-
-						int idUsuario = rs.getInt(1);
-						String primerNombre = rs.getString(4);
-						String segundoNombre = rs.getString(5);
-						String paterno = rs.getString(6);
-						String materno = rs.getString(7);
-						String email = rs.getString(8);
-						int telefono = rs.getInt(9);
-						String idCiudad = rs.getString(10);
-						Date fechNac = rs.getDate(11);
-						String sexo = rs.getString(12);
-
-						Date dateSQL = new Date(fechNac.getTime());
-						ciudad.setIdCiudad(idCiudad);
-						fechaNacimiento.setTime(dateSQL);
-
-						u.setIdUsuario(idUsuario);
-						u.setCodigoUsuario(codigoUsuario);
-						u.setPasswordUsuario(passwordUsuario);
-						u.setPrimerNombre(primerNombre);
-						u.setSegundoNombre(segundoNombre);
-						u.setPaterno(paterno);
-						u.setMaterno(materno);
-						u.setEmail(email);
-						u.setTelefono(telefono);
-						u.setIdCiudad(Integer.parseInt(idCiudad));
-						u.setFechaNacimiento(fechaNacimiento);
-
-						u.setSexo(sexo);
-					}
-
-				} catch (SQLException e) {
-					e.printStackTrace();
-				} finally {
-					if (ps != null) {
-						ps.close();
-					}
-					if (rs != null) {
-						rs.close();
-					}
-					if (conexion != null) {
-						System.out.println("Cerrando Conexion...");
-						conexion.close();
-					}
-				}
-			}
-		}
-
-		return u;
-	}
-
-	public boolean isExisteUsuario(Usuario u) throws SQLException {
 		ConexionBD cnxBD = configDB.obtenerConexionConectada();
 		Connection conexion = cnxBD.getConexion();
 
 		if (conexion != null) {
-			String nombreTabla = ConstanteNombreTabla.USUARIO;
-			String nombreEsquemaDB = cnxBD.getNameBD();
-			String codigo = ConstanteGral.CADENA_VACIA;
-			String password = ConstanteGral.CADENA_VACIA;
-			String email = ConstanteGral.CADENA_VACIA;
-			if (u != null) {
-				codigo = "'" + u.getCodigoUsuario() + "'";
-				password = "'" + u.getPasswordUsuario() + "'";
-				email = "'" + u.getEmail() + "'";
-			}
-
-			String sqlSelectUsuario = ConstanteQueriesDB.SELECT;
-			String[] datosSelectUsuario = { nombreEsquemaDB, nombreTabla };
-			String querySelect = UtilBO.cambioValores(sqlSelectUsuario,
-					datosSelectUsuario);
-			String[] datosSelect = { codigo, password, email };
-
-			UtilDao utilDao = new UtilDao();
-			String[] columnasSelectUsuario = utilDao
-					.getNamesColumnsTable(querySelect);
-
-			// Eliminando algunos campos
-			String[] columnasSelectUsuarioNuevo = null;
-			if (columnasSelectUsuario != null
-					&& columnasSelectUsuario.length > 0) {
-
-				UtilBO utilBo = new UtilBO();
-				String[] elementosAEliminar = { ConstanteUsuario.IDUSUARIO,
-						ConstanteUsuario.EMAIL };
-				columnasSelectUsuarioNuevo = utilBo.eliminarElementosArreglo(
-						columnasSelectUsuario, elementosAEliminar);
-			}
-
-			String whereUsuario = utilDao.construirWhere(
-					columnasSelectUsuarioNuevo, datosSelect);
-
-			System.out.println("whereUsuario:" + whereUsuario);
-
-			String[] datos = { nombreEsquemaDB, nombreTabla, whereUsuario };
-
-			String querySelectRest = UtilBO.cambioValores(
-					ConstanteQueriesDB.SELECT_RESTRINGIDO, datos);
-
-			System.out.println("QUERY: " + querySelectRest);
-
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-
-			try {
-				ps = conexion.prepareStatement(querySelectRest);
-				rs = ps.executeQuery();
-
-				if (!rs.next()) {
-					return true;
-				}
-				return false;
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (ps != null) {
-					ps.close();
-				}
-				if (rs != null) {
-					rs.close();
-				}
-				if (conexion != null) {
-					System.out.println("Cerrando Conexion...");
-					conexion.close();
-				}
-			}
-		}
-
-		return true;
-	}
-
-	public boolean nuevoUsuario(Usuario u) throws SQLException {
-		ConexionBD cnxBD = configDB.obtenerConexionConectada();
-		Connection conexion = cnxBD.getConexion();
-
-		if (conexion != null) {
-			UtilDao utilDao = new UtilDao();
-			String nombreTabla = ConstanteNombreTabla.USUARIO;
-			String nombreEsquemaDB = cnxBD.getNameBD();
-			String codigo = ConstanteGral.CADENA_VACIA;
-			String password = ConstanteGral.CADENA_VACIA;
-			String email = ConstanteGral.CADENA_VACIA;
-
-			String[] datosSelect = { nombreEsquemaDB, nombreTabla };
-
-			String querySelect = UtilBO.cambioValores(
-					ConstanteQueriesDB.SELECT, datosSelect);
-
-			String[] nombresColumnasArr = utilDao
-					.getNamesColumnsTable(querySelect);
-
-			String nombresColumnas = UtilBO
-					.convertStringToArrayComas(nombresColumnasArr);
-
-			String[] valoresUsuarioArr = new String[3];
 
 			if (u != null) {
-				codigo = "'" + u.getCodigoUsuario() + "'";
-				password = "'" + u.getPasswordUsuario() + "'";
-				email = "'" + u.getEmail() + "'";
+				System.out.println("USUARIO:" + u);
+				if (!u.isVacio()) {
+
+					String nombreEsquemaDB = cnxBD.getNameBD();
+					String nombreTabla = ConstanteNombreTabla.USUARIO;
+
+					String codigoUsuario = u.getCodigoUsuario();
+					String passwordUsuario = u.getPasswordUsuario();
+					String email = u.getEmail();
+
+					String[] tipoDatos = { ConstanteGral.TIPO_VARCHAR2,
+							ConstanteGral.TIPO_VARCHAR2,
+							ConstanteGral.TIPO_VARCHAR2 };
+					String[] datosARegistrar = { codigoUsuario,
+							passwordUsuario, email };
+					String[] columnasInsertar = { ConstanteUsuario.CODIGO,
+							ConstanteUsuario.PASSWORD, ConstanteUsuario.EMAIL };
+
+					String[] datosAUtilizarConvertidos = UtilBO
+							.convertirDatosADatosSQL(tipoDatos, datosARegistrar);
+
+					String datosARegistrarStr = UtilBO
+							.convertStringToArrayComas(datosAUtilizarConvertidos);
+					String columnasInsertarStr = UtilBO
+							.convertStringToArrayComas(columnasInsertar);
+
+					String queryDefault = ConstanteQueriesDB.INSERT;
+
+					String[] datos = { nombreEsquemaDB, nombreTabla,
+							columnasInsertarStr, datosARegistrarStr };
+					String queryInsert = UtilBO.cambioValores(queryDefault,
+							datos);
+
+					System.out.println("queryInsert:" + queryInsert);
+
+					PreparedStatement ps = null;
+
+					try {
+						ps = conexion.prepareStatement(queryInsert);
+						int resultado = ps.executeUpdate();
+
+						if (resultado == 1) {
+							System.out
+									.println("Se registro correctamente el USUARIO...");
+							return true;
+						}
+						return false;
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						if (ps != null) {
+							ps.close();
+						}
+						if (conexion != null) {
+							System.out.println("Cerrando Conexion...");
+							conexion.close();
+						}
+					}
+				} else {
+					System.out.println("USUARIO VACIO");
+				}
+
+			} else {
+				System.out.println("El usuario es nulo");
 			}
 
-			valoresUsuarioArr[0] = codigo;
-			valoresUsuarioArr[1] = password;
-			valoresUsuarioArr[2] = email;
-
-			String valoresUsuario = UtilBO
-					.convertStringToArrayComas(valoresUsuarioArr);
-
-			String[] datos = { nombreEsquemaDB, nombreTabla, nombresColumnas,
-					valoresUsuario };
-
-			String queryInsert = UtilBO.cambioValores(
-					ConstanteQueriesDB.INSERT, datos);
-
-			System.out.println("QUERY: " + queryInsert);
-
-			PreparedStatement ps = null;
-			ResultSet rs = null;
-
-			try {
-				ps = conexion.prepareStatement(queryInsert);
-				rs = ps.executeQuery();
-
-				if (!rs.next()) {
-					return true;
-				}
-				return false;
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if (ps != null) {
-					ps.close();
-				}
-				if (rs != null) {
-					rs.close();
-				}
-				if (conexion != null) {
-					System.out.println("Cerrando Conexion...");
-					conexion.close();
-				}
-			}
 		}
 
-		return true;
+		return false;
 	}
 }

@@ -1,31 +1,26 @@
 package bo.listtasks.services.tarea;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Calendar;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import bo.listtasks.constantes.ConstanteGral;
-import bo.listtasks.dao.tarea.TareaDao;
-import bo.listtasks.dto.tarea.Tarea;
+import bo.listtasks.constantes.ConstanteUsuario;
 
 /**
- * Servlet implementation class ServicioTask
+ * Servlet implementation class ServicioCreacionTarea
  */
-public class ServicioTarea extends HttpServlet {
+public class ServicioCreacionTarea extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServicioTarea() {
+	public ServicioCreacionTarea() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -43,6 +38,19 @@ public class ServicioTarea extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+
+		System.out
+				.println("--------------ServicioCreacionTarea:doPost--------------");
+
+		HttpSession sess = request.getSession(false);
+		if (sess != null) {
+
+			String idUsuario = String.valueOf(sess
+					.getAttribute(ConstanteUsuario.IDUSUARIO));
+
+			System.out.println("idUsuario:" + idUsuario);
+
+		}
 
 	}
 }

@@ -15,7 +15,7 @@ import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteNombreTabla;
 import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.constantes.ConstantesRutasServlet;
-import bo.listtasks.dao.usuario.UsuarioDao;
+import bo.listtasks.dao.util.UtilDao;
 import bo.listtasks.dto.usuario.Usuario;
 
 /**
@@ -63,22 +63,35 @@ public class ServicioLogin extends HttpServlet {
 
 			System.out.println("USUARIO:" + u);
 
-			String[] columnasAConsultar = { ConstanteUsuario.CODIGO,
+			String[] columnasDelSelect = { ConstanteUsuario.CODIGO };
+			String[] columnasDeCondicion = { ConstanteUsuario.CODIGO,
 					ConstanteUsuario.PASSWORD };
-			String[] datosUsuario = { codigoUsuario, passwordUsuario };
+			String[] datosAUtilizar = { codigoUsuario, passwordUsuario };
 			String[] tipoDatos = { ConstanteGral.TIPO_VARCHAR2,
 					ConstanteGral.TIPO_VARCHAR2 };
 
 			String nombreTabla = ConstanteNombreTabla.USUARIO;
 
-			UsuarioDao udao = new UsuarioDao();
 			String operadorLogicoSQL = ConstanteGral.OPERADOR_AND;
-			boolean isExisteUsuario = udao.isExisteRegistro(nombreTabla,
-					columnasAConsultar, tipoDatos, datosUsuario,
-					operadorLogicoSQL);
 
-			if (isExisteUsuario) {
+			UtilDao utilDao = new UtilDao();
+
+			boolean isExisteUsuario = utilDao.isExisteRegistro(nombreTabla,
+					columnasDelSelect, columnasDeCondicion, tipoDatos,
+					datosAUtilizar, operadorLogicoSQL);
+
+			String nombreColumna = ConstanteUsuario.IDUSUARIO;
+			String tipoDeDatoColumna = ConstanteGral.TIPO_NUMBER;
+			String idUsuario = utilDao.obtenerDatoToTabla(nombreTabla,
+					nombreColumna, tipoDeDatoColumna, columnasDeCondicion,
+					datosAUtilizar, tipoDatos, operadorLogicoSQL);
+
+			System.out.println("idUsuario:" + idUsuario);
+
+			if (isExisteUsuario && idUsuario != null) {
 				System.out.println("Usuario valido...");
+
+				u.setIdUsuario(Integer.parseInt(idUsuario));
 
 				HttpSession session = request.getSession(true);
 
@@ -87,9 +100,10 @@ public class ServicioLogin extends HttpServlet {
 					System.out.println("Inicio Sesion...");
 					final String idSesionUser = session.getId();
 
+					session.setAttribute(ConstanteUsuario.IDUSUARIO, idUsuario);
 					session.setAttribute(ConstanteGral.ID_SESION_USUARIO,
 							idSesionUser);
-					session.setAttribute(ConstanteGral.SESION_USUARIO, u);
+					session.setAttribute(ConstanteGral.SESION_OBJETO_USUARIO, u);
 					session.setMaxInactiveInterval(30 * 60); // 30min
 
 					System.out.println("Creada: "

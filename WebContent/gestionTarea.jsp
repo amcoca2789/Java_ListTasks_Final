@@ -10,6 +10,7 @@
 	HttpSession sesionUsuario = request.getSession(false);
 
 	Usuario uConSesion = null;
+	int idUsuario = -1;
 	String usuarioStr = ConstanteGral.SIN_DATOS;
 	String idSesionUsuario = ConstanteGral.SIN_DATOS;
 	boolean isCorrectaSesion = false;
@@ -17,12 +18,13 @@
 	if (sesionUsuario != null) {
 		isCorrectaSesion = this.inicioSesion(sesionUsuario);
 		uConSesion = (Usuario) sesionUsuario
-				.getAttribute(ConstanteGral.SESION_USUARIO);
+				.getAttribute(ConstanteGral.SESION_OBJETO_USUARIO);
 		idSesionUsuario = String.valueOf(session
 				.getAttribute(ConstanteGral.ID_SESION_USUARIO));
 	}
 
 	if (isCorrectaSesion) {
+		idUsuario = uConSesion.getIdUsuario();
 		usuarioStr = uConSesion.getCodigoUsuario();
 	} else {
 		System.out.println("No inicio sesion");
@@ -36,7 +38,7 @@
 <%!public boolean inicioSesion(HttpSession session) {
 
 		Usuario u = (Usuario) session
-				.getAttribute(ConstanteGral.SESION_USUARIO);
+				.getAttribute(ConstanteGral.SESION_OBJETO_USUARIO);
 
 		String idUsuario = session.getId();
 		String idUsuarioAtt = String.valueOf(session
@@ -89,7 +91,7 @@
 			<ul class="cabecera-navegacion-lista">
 				<li class="cabecera-navegacion-lista-item"><a
 					class="cabecera-navegacion-lista-item-enlace u-enlace"
-					href="ServicioPerfil"><%=usuarioStr%></a></li>
+					href="ServicioPerfil">#<%=idUsuario%> - <%=usuarioStr%></a></li>
 				<li class="cabecera-navegacion-lista-item"><a
 					class="cabecera-navegacion-lista-item-enlace u-enlace"
 					href="ServiceLogout">Cerrar Sesion</a></li>

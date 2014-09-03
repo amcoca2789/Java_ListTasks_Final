@@ -16,6 +16,7 @@ import bo.listtasks.constantes.ConstanteNombreTabla;
 import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.constantes.ConstantesRutasServlet;
 import bo.listtasks.dao.usuario.UsuarioDao;
+import bo.listtasks.dao.util.UtilDao;
 import bo.listtasks.dto.usuario.Usuario;
 
 /**
@@ -64,30 +65,35 @@ public class ServicioSignUp extends HttpServlet {
 			u.setPasswordUsuario(passwordUsuario);
 			u.setEmail(emailUsuario);
 
-			UsuarioDao userDao = new UsuarioDao();
+			UtilDao uDao = new UtilDao();
+
 			String nombreTabla = ConstanteNombreTabla.USUARIO;
-			String operadorLogicoSQL = ConstanteGral.OPERADOR_AND;
+			/** Datos para consultar por CODIGO USUARIO */
+			String[] columnasDelSelectCodigoUsuario = { ConstanteUsuario.CODIGO };
+			String[] columnasDeCondicionCodigoUsuario = { ConstanteUsuario.CODIGO };
+			String[] tipoDatosCodigoUsuario = { ConstanteGral.TIPO_VARCHAR2 };
+			String[] datosAUtilizarCodigoUsuario = { codigoUsuario };
 
-			String[] columnasAConsultarForCodigo = { ConstanteUsuario.CODIGO };
-			String[] tipoDatosForCodigo = { ConstanteGral.TIPO_VARCHAR2 };
-			String[] datosUsuarioForCodigo = { codigoUsuario };
+			boolean isExisteForCodigoUsuario = uDao.isExisteRegistro(
+					nombreTabla, columnasDelSelectCodigoUsuario,
+					columnasDeCondicionCodigoUsuario, tipoDatosCodigoUsuario,
+					datosAUtilizarCodigoUsuario, ConstanteGral.OPERADOR_AND);
 
-			boolean isExisteForCodigoUsuario = userDao.isExisteRegistro(
-					nombreTabla, columnasAConsultarForCodigo,
-					tipoDatosForCodigo, datosUsuarioForCodigo,
-					operadorLogicoSQL);
+			/** Datos para consultar por EMAIL */
+			String[] columnasDelSelectEmail = { ConstanteUsuario.EMAIL };
+			String[] columnasDeCondicionEmail = { ConstanteUsuario.EMAIL };
+			String[] tipoDatosEmail = { ConstanteGral.TIPO_VARCHAR2 };
+			String[] datosAUtilizarEmail = { emailUsuario };
 
-			String[] columnasAConsultarForEmail = { ConstanteUsuario.EMAIL };
-			String[] tipoDatosForEmail = { ConstanteGral.TIPO_VARCHAR2 };
-			String[] datosUsuarioForEmail = { emailUsuario };
-
-			boolean isExisteForEmailUsuario = userDao.isExisteRegistro(
-					nombreTabla, columnasAConsultarForEmail, tipoDatosForEmail,
-					datosUsuarioForEmail, operadorLogicoSQL);
+			boolean isExisteForEmailUsuario = uDao.isExisteRegistro(
+					nombreTabla, columnasDelSelectEmail,
+					columnasDeCondicionEmail, tipoDatosEmail,
+					datosAUtilizarEmail, ConstanteGral.OPERADOR_AND);
 
 			if (!isExisteForCodigoUsuario) {
 				if (!isExisteForEmailUsuario) {
 
+					UsuarioDao userDao = new UsuarioDao();
 					boolean isAdicionado = userDao.adicionUsuario(u);
 
 					HttpSession session = request.getSession(true);
@@ -101,8 +107,8 @@ public class ServicioSignUp extends HttpServlet {
 							session.setAttribute(
 									ConstanteGral.ID_SESION_USUARIO,
 									idSesionUser);
-							session.setAttribute(ConstanteGral.SESION_USUARIO,
-									u);
+							session.setAttribute(
+									ConstanteGral.SESION_OBJETO_USUARIO, u);
 							session.setMaxInactiveInterval(30 * 60); // 30min
 
 							System.out.println("Creada: "
@@ -134,5 +140,4 @@ public class ServicioSignUp extends HttpServlet {
 			dispatcher.forward(request, response);
 		}
 	}
-
 }

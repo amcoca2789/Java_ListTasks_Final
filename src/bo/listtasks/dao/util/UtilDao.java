@@ -1,13 +1,15 @@
 package bo.listtasks.dao.util;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import bo.listtasks.constantes.ConstanteGral;
+import bo.listtasks.constantes.ConstanteQueriesDB;
+import bo.listtasks.util.UtilBO;
 
 public class UtilDao extends ConfiguracionDB {
 
@@ -196,19 +198,122 @@ public class UtilDao extends ConfiguracionDB {
 		return tipoDatoColumnas;
 	}
 
-	public static void main(String[] args) {
-		UtilDao uDao = new UtilDao();
-		String sqlSelect = "SELECT * FROM MYTODO.USUARIO";
-		try {
-			String[] resultado = uDao.obtenerTiposDatosColumnaTabla(sqlSelect);
+	public boolean isExisteRegistro(String nombreTabla,
+			String[] columnasDelSelect, String[] columnasDeCondicion,
+			String[] tipoDatos, String[] datosAUtilizar,
+			String operadorLogicoSQL) throws SQLException {
 
-			for (String elemento : resultado) {
-				System.out.println(elemento);
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+			String nombreEsquemaDB = cnxBD.getNameBD();
+
+			String columnasDelSelectStr = UtilBO
+					.convertirArrayToStringSeparadoCaracter(columnasDelSelect,
+							ConstanteGral.COMA);
+
+			String queryDefault = ConstanteQueriesDB.SELECT_CON_RESTRICCION;
+
+			String[] datosAUtilizarConvertidos = UtilBO
+					.convertirDatosADatosSQL(tipoDatos, datosAUtilizar);
+
+			String where = this.construirWhere(columnasDeCondicion,
+					datosAUtilizarConvertidos, operadorLogicoSQL);
+
+			String[] datos = { columnasDelSelectStr, nombreEsquemaDB,
+					nombreTabla, where };
+			String querySelect = UtilBO.cambioValores(queryDefault, datos);
+
+			System.out.println("querySelect:" + querySelect);
+
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+
+			try {
+				ps = conexion.prepareStatement(querySelect);
+				rs = ps.executeQuery();
+
+				if (rs.next()) {
+					return true;
+				}
+				return false;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (ps != null) {
+					ps.close();
+				}
+				if (rs != null) {
+					rs.close();
+				}
+				if (conexion != null) {
+					System.out.println("Cerrando Conexion...");
+					conexion.close();
+				}
 			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
+
+		return false;
+	}
+
+	public String obtenerDatoToTabla(String nombreTabla, String nombreColumna,
+			String tipoDeDatoColumna, String[] columnasDeCondicion,
+			String[] datosAUtilizar, String[] tipoDatos,
+			String operadorLogicoSQL) throws SQLException {
+
+		String dato = null;
+
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+			String nombreEsquemaDB = cnxBD.getNameBD();
+
+			String queryDefault = ConstanteQueriesDB.SELECT_CON_RESTRICCION;
+
+			String[] datosAUtilizarConvertidos = UtilBO
+					.convertirDatosADatosSQL(tipoDatos, datosAUtilizar);
+
+			String where = this.construirWhere(columnasDeCondicion,
+					datosAUtilizarConvertidos, operadorLogicoSQL);
+
+			String[] datos = { nombreColumna, nombreEsquemaDB, nombreTabla,
+					where };
+
+			String querySelect = UtilBO.cambioValores(queryDefault, datos);
+
+			System.out.println("querySelect:" + querySelect);
+
+			PreparedStatement ps = null;
+			ResultSet rs = null;
+
+			try {
+				ps = conexion.prepareStatement(querySelect);
+				rs = ps.executeQuery();
+
+				if (rs.next()) {
+					dato = String.valueOf(rs.getInt(1));
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (ps != null) {
+					ps.close();
+				}
+				if (rs != null) {
+					rs.close();
+				}
+				if (conexion != null) {
+					System.out.println("Cerrando Conexion...");
+					conexion.close();
+				}
+			}
+		}
+
+		return dato;
 	}
 
 }

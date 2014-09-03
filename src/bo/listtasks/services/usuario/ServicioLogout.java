@@ -46,7 +46,7 @@ public class ServicioLogout extends HttpServlet {
 			String idSesionUsuario = String.valueOf(sess
 					.getAttribute(ConstanteGral.ID_SESION_USUARIO));
 			sess.removeAttribute(ConstanteGral.ID_SESION_USUARIO);
-			sess.removeAttribute(ConstanteGral.SESION_USUARIO);
+			sess.removeAttribute(ConstanteGral.SESION_OBJETO_USUARIO);
 			sess.invalidate();
 
 			System.out.println("#Sesion CERRADA:" + idSesionUsuario);

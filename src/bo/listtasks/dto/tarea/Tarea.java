@@ -2,14 +2,14 @@ package bo.listtasks.dto.tarea;
 
 import java.util.Calendar;
 
+import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.util.UtilBO;
 
 public class Tarea {
 	public int idTarea;
 	private String descripcionTarea;
 	private Calendar fechaRealizacionTarea;
-	private String etapaTarea;
-	private String estadoRegistro; // Activado o Desactivado
+	private int idUsuario;
 
 	public int getIdTarea() {
 		return idTarea;
@@ -35,35 +35,36 @@ public class Tarea {
 		this.fechaRealizacionTarea = fechaRealizacionTarea;
 	}
 
-	public String getEtapaTarea() {
-		return etapaTarea;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setEtapaTarea(String etapaTarea) {
-		this.etapaTarea = etapaTarea;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
-	public String getEstadoRegistro() {
-		return estadoRegistro;
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Tarea [idTarea=");
+		builder.append(idTarea);
+		builder.append(", descripcionTarea=");
+		builder.append(descripcionTarea);
+		builder.append(", fechaRealizacionTarea=");
+		builder.append(fechaRealizacionTarea);
+		builder.append(", idUsuario=");
+		builder.append(idUsuario);
+		builder.append("]");
+		return builder.toString();
 	}
 
-	public void setEstadoRegistro(String estadoRegistro) {
-		this.estadoRegistro = estadoRegistro;
+	public boolean isVacio() {
+
+		if (descripcionTarea != null && fechaRealizacionTarea != null
+				&& !ConstanteGral.CADENA_VACIA.equals(descripcionTarea)) {
+			return false;
+		}
+
+		return true;
 	}
-
-	public String toStringTareaQuery() {
-
-		String fechaRealizacionSQL = UtilBO
-				.convertCalendarToDateOracle(this.fechaRealizacionTarea);
-
-		return "Tarea [idTarea=" + idTarea + ", descripcionTarea="
-				+ descripcionTarea + ", fechaRealizacionTarea="
-				+ fechaRealizacionSQL + ", etapaTarea=" + etapaTarea
-				+ ", estadoRegistro=" + estadoRegistro + "]";
-	}
-
-	public String obtenerCadenaWhereTareaBasico() {
-		return "descripcion = '" + descripcionTarea + "'";
-	}
-
 }

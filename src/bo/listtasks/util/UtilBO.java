@@ -41,13 +41,14 @@ public class UtilBO {
 
 	}
 
-	public static String convertStringToArrayComas(String[] columnas) {
+	public static String convertirArrayToStringSeparadoCaracter(
+			String[] columnas, String caracterSeparacion) {
 		String nombresColumnas = ConstanteGral.CADENA_VACIA;
 
 		for (int i = 0; i < columnas.length; i++) {
 			nombresColumnas += columnas[i];
 			if (i != columnas.length - 1) {
-				nombresColumnas += ", ";
+				nombresColumnas += caracterSeparacion;
 			}
 		}
 
@@ -166,10 +167,15 @@ public class UtilBO {
 				ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1);
 
 		Date fechaParseada = null;
-		try {
-			fechaParseada = sdf.parse(fecha);
-		} catch (ParseException e) {
-			e.printStackTrace();
+
+		if (fecha != null) {
+			try {
+				fechaParseada = sdf.parse(fecha);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("La fecha es nula");
 		}
 
 		return fechaParseada;
@@ -178,18 +184,22 @@ public class UtilBO {
 	public static String[] convertirDatosADatosSQL(String[] tipoDatos,
 			String[] datos) {
 
+		String[] datosConvertidos = null;
+
 		if (datos != null && datos.length > 0 && tipoDatos != null
 				&& tipoDatos.length > 0 && datos.length == tipoDatos.length) {
 
+			datosConvertidos = new String[datos.length];
+
 			for (int i = 0; i < tipoDatos.length; i++) {
 				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
-					datos[i] = "'" + datos[i] + "'";
+					datosConvertidos[i] = "'" + datos[i] + "'";
 				}
 			}
 		} else {
 			System.out.println("No se puedo realizar ninguna conversion");
 		}
 
-		return datos;
+		return datosConvertidos;
 	}
 }

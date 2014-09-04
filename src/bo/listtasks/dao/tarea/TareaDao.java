@@ -209,4 +209,28 @@ public class TareaDao {
 
 		return tareasUsuario;
 	}
+
+	public List<Tarea> filtrarTareasPorFecha(List<Tarea> tareas,
+			Calendar fechaFiltro) {
+		List<Tarea> tareasFiltradas = null;
+
+		if (tareas != null) {
+			if (fechaFiltro != null) {
+				tareasFiltradas = new ArrayList<Tarea>();
+				for (Tarea tarea : tareas) {
+					if (fechaFiltro.equals(tarea.getFechaRealizacionTarea())) {
+						tareasFiltradas.add(tarea);
+					}
+				}
+			} else {
+				System.out.println("La fecha Filtro es nula");
+				return tareas;
+			}
+
+		} else {
+			System.out.println("La lista de tareas es nulo");
+		}
+
+		return tareasFiltradas;
+	}
 }

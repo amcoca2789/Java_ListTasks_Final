@@ -214,4 +214,105 @@ public class UtilBO {
 
 		return datosConvertidos;
 	}
+
+	public List<Calendar> obtenerSemana(Calendar fecha) {
+
+		List<Calendar> listaFechasSemana = null;
+
+		if (fecha != null) {
+
+			listaFechasSemana = new ArrayList<Calendar>();
+
+			Calendar lunes = (Calendar) fecha.clone();
+			lunes.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+			listaFechasSemana.add(lunes);
+
+			int nroDias = 1;
+			while (nroDias <= 6) {
+				Calendar fechaX = (Calendar) lunes.clone();
+				fechaX.add(Calendar.DATE, nroDias);
+				nroDias++;
+				listaFechasSemana.add(fechaX);
+			}
+		} else {
+			System.out.println("Fecha es nulo");
+		}
+
+		return listaFechasSemana;
+	}
+
+	public String obtenerNombreDia(Calendar fecha) {
+
+		String nombreDia = ConstanteGral.SIN_DATOS;
+
+		if (fecha != null) {
+			int nroDia = fecha.get(Calendar.DAY_OF_WEEK);
+
+			switch (nroDia) {
+			case 1:
+				nombreDia = "Domingo";
+				break;
+			case 2:
+				nombreDia = "Lunes";
+				break;
+			case 3:
+				nombreDia = "Martes";
+				break;
+			case 4:
+				nombreDia = "Miercoles";
+				break;
+			case 5:
+				nombreDia = "Jueves";
+				break;
+			case 6:
+				nombreDia = "Viernes";
+				break;
+			case 7:
+				nombreDia = "Sabado";
+				break;
+			}
+
+		} else {
+			System.out.println("Fecha Nula");
+		}
+
+		return nombreDia;
+	}
+
+	public String convertirCalendarToString(Calendar fecha) {
+
+		String salida = ConstanteGral.SIN_DATOS;
+
+		if (fecha != null) {
+			int dia = fecha.get(Calendar.DATE);
+			int mes = fecha.get(Calendar.MONTH);
+			int year = fecha.get(Calendar.YEAR);
+
+			salida = dia + "/" + mes + "/" + year;
+
+		} else {
+			System.out.println("Fecha nula");
+		}
+
+		return salida;
+	}
+
+	public static void main(String[] args) {
+
+		UtilBO uBo = new UtilBO();
+		Calendar fecha = Calendar.getInstance();
+		fecha.set(2014, Calendar.SEPTEMBER, 17);
+		System.out.println("main:" + uBo.convertirCalendarToString(fecha));
+		List<Calendar> fechas = uBo.obtenerSemana(fecha);
+
+		if (fechas != null) {
+			for (Calendar fechaX : fechas) {
+				System.out.println(uBo.convertirCalendarToString(fechaX));
+			}
+		} else {
+			System.out.println("Lista vacia");
+		}
+
+	}
 }

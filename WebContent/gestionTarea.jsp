@@ -106,7 +106,6 @@
             </nav>
         </header>
         <section class="calendario">
-        
             <div class="calendario-dia" id="dia1">
                 <div class="calendario-dia-nombre">
                     <span class="calendario-dia-nombre-span u-span">Lunes</span>
@@ -116,7 +115,6 @@
                         </li>
                     </ul>
                 </div>
-                
                 <form class="calendario-dia-formulario" id="form-newtarea-dia1" action="ServiceNewTarea" method="post">
                     <h3 class="calendario-dia-formulario-titulo3 u-titulo-3">Nueva Tarea</h3>
                     <label class="calendario-dia-formulario-label u-label" for="form-newtarea">Descripcion:</label>
@@ -136,49 +134,28 @@
                         </li>
                     </ul>
                 </form>
-                                        	<%
-        	String msg = "Lista vacia";
-			int nroDia = 1;
-			int nroTarea = 1;
-			if(listaTareas!=null){
-				for(Tarea tarea: listaTareas){
-					String descripcionTarea = tarea.getDescripcionTarea();
-					String idBotonera = "dia"+nroDia+"-"+"tarea"+nroTarea;
-					String idBotonEdicion = "btn-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-					String idFormEdicion = "form-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-					String nameIdCajaDescripcionEdicion ="caja_descripcion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
-					String nameIdCajaFechaRealizEdicion ="caja_fecharealizacion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
-        	
-        	%>
-                
-                <div class="calendario-dia-botonera" id="<%=idBotonera %>">
+                <div class="calendario-dia-botonera" id="dia1-tarea1">
                     <ul class="calendario-dia-botonera-lista">
                         <li class="calendario-dia-botonera-lista-item">
-                            <a href="" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-concluida" id="btn-concluida-dia1-tarea1"></a>
+                            <a href="ServicioConclusionTarea" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-concluida" id="btn-concluida-dia1-tarea1"></a>
                         </li>
                         <li class="calendario-dia-botonera-lista-item">
-                            <a href="" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-archivada" id="btn-archivada-dia1-tarea1"></a>
-                        </li>
-                        <li class="calendario-dia-botonera-lista-item">
-                            <a href="" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-sindesarrollar" id="btn-sindesarrollar-dia1-tarea1"></a>
-                        </li>
-                        <li class="calendario-dia-botonera-lista-item">
-                            <a href="" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-endesarrollo" id="btn-endesarrollo-dia1-tarea1"></a>
+                            <a href="ServicioArchivarTarea" class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-archivada" id="btn-archivada-dia1-tarea1"></a>
                         </li>
                     </ul>
                 </div>
                 <div class="calendario-dia-tarea">
                     <span class="calendario-dia-tarea-descripcion u-span">
-                    <%=descripcionTarea %>
-                    <a class="calendario-dia-tarea-descripcion-enlace u-boton-ediciontarea" id="<%=idBotonEdicion %>" href="#"></a>
+                    Reuniones o comunicaciones online con amig@s o familiares
+                    <a class="calendario-dia-tarea-descripcion-enlace u-boton-ediciontarea" id="btn-edicion-dia1-tarea1" href="#"></a>
                     </span>
                 </div>
-                <form class="calendario-dia-formulario" id="<%=idFormEdicion %>" action="ServicioEdicionTarea" method="post">
+                <form class="calendario-dia-formulario" id="form-edicion-dia1-tarea1" action="ServicioEdicionTarea" method="post">
                     <h3 class="calendario-dia-formulario-titulo3 u-titulo-3">Edicion Tarea</h3>
                     <label class="calendario-dia-formulario-label u-label" for="form-edicion-dia1-tarea1">Descripcion:</label>
-                    <input class="calendario-dia-formulario-input u-input" name="<%=nameIdCajaDescripcionEdicion %>" id="<%=nameIdCajaDescripcionEdicion %>" type="text" />
+                    <input class="calendario-dia-formulario-input u-input" name="caja_descripcion_edicion_dia1_tarea1" id="caja_descripcion_edicion_dia1_tarea1" type="text" />
                     <label class="calendario-dia-formulario-label u-label" for="form-edicion-dia1-tarea1">Fecha Realizacion:</label>
-                    <input class="calendario-dia-formulario-input u-input u-fecha" name="<%=nameIdCajaFechaRealizEdicion %>" id="<%=nameIdCajaFechaRealizEdicion %>" type="text" />
+                    <input class="calendario-dia-formulario-input u-input u-fecha" name="caja_fecharealizacion_edicion_dia1_tarea1" id="caja_fecharealizacion_edicion_dia1_tarea1" type="text" />
                     <ul class="calendario-dia-formulario-lista">
                         <li class="calendario-dia-formulario-lista-item">
                             <button class="calendario-dia-formulario-lista-item-boton u-boton" id="btn-guardar-dia1-tarea1" type="submit">Guardar</button>
@@ -191,14 +168,6 @@
                         </li>
                     </ul>
                 </form>
-                <%
-                nroDia++;
-				nroTarea++;
-					}
-				}else{
-					System.out.println("No existe tareas");
-				}
-                %>
             </div>
         </section>
         <footer class="contacto">

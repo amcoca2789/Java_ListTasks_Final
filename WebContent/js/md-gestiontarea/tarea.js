@@ -6,6 +6,7 @@ var name_form_newtarea = "form-newtarea-";
 $(document).ready(function() {
 	$(".u-boton-newtarea").on('click', mostrarFormularioNewTarea);
     $(".u-boton-ediciontarea").on('click', mostrarFormularioEdicionTarea);
+    $( ".u-fecha" ).datepicker({ dateFormat: "yy-mm-dd" });
 });
 
 function mostrarFormularioNewTarea (evnt) {

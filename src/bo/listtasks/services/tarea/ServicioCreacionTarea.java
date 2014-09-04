@@ -2,6 +2,7 @@ package bo.listtasks.services.tarea;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bo.listtasks.constantes.ConstanteUsuario;
+import bo.listtasks.constantes.ConstantesRutasServlet;
 
 /**
  * Servlet implementation class ServicioCreacionTarea
@@ -47,6 +49,11 @@ public class ServicioCreacionTarea extends HttpServlet {
 
 			String idUsuario = String.valueOf(sess
 					.getAttribute(ConstanteUsuario.IDUSUARIO));
+
+			String url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
+			RequestDispatcher dispatcher = request
+					.getRequestDispatcher(url_destino);
+			dispatcher.forward(request, response);
 
 		}
 

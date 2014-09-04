@@ -49,7 +49,15 @@
 		<servlet-class>bo.listtasks.services.tarea.ServicioArchivarTarea</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>ConclusionTarea</servlet-name>
+		<servlet-name>ArchivarTarea</servlet-name>
 		<url-pattern>/ServicioArchivarTarea</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>EdicionTarea</servlet-name>
+		<servlet-class>bo.listtasks.services.tarea.ServicioEdicionTarea</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EdicionTarea</servlet-name>
+		<url-pattern>/ServicioEdicionTarea</url-pattern>
 	</servlet-mapping>
 </web-app>

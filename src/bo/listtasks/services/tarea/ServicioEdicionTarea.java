@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ServicioConclusionTarea
  */
-public class ServicioArchivarTarea extends HttpServlet {
+public class ServicioEdicionTarea extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServicioArchivarTarea() {
+    public ServicioEdicionTarea() {
         super();
     }
 
@@ -31,7 +31,7 @@ public class ServicioArchivarTarea extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Estamos archivando la tarea");
+		System.out.println("Estamos editando la tarea");
 	}
 
 }

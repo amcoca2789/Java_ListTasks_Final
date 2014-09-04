@@ -48,8 +48,6 @@ public class ServicioCreacionTarea extends HttpServlet {
 			String idUsuario = String.valueOf(sess
 					.getAttribute(ConstanteUsuario.IDUSUARIO));
 
-			System.out.println("idUsuario:" + idUsuario);
-
 		}
 
 	}

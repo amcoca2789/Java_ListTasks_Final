@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteQueriesDB;
@@ -55,7 +56,7 @@ public class UtilDao extends ConfiguracionDB {
 			}
 
 			if (conexion != null) {
-				System.out.println("Cerrando Conexion...");
+				System.out.println("CONEXION CERRADA");
 				conexion.close();
 			}
 		}
@@ -107,7 +108,7 @@ public class UtilDao extends ConfiguracionDB {
 			}
 
 			if (conexion != null) {
-				System.out.println("Cerrando Conexion...");
+				System.out.println("CONEXION CERRADA");
 				conexion.close();
 			}
 		}
@@ -115,33 +116,42 @@ public class UtilDao extends ConfiguracionDB {
 		return namesColumnasTask;
 	}
 
-	public String construirWhere(String[] columnas, String[] datos,
-			String operadorLogicoSQL) {
+	public String construirWhere(String[] columnasCondicion,
+			String[] datosCondicion, String operadorLogicoSQL) {
+
+		System.out.println("columnasCondicion[]:"
+				+ Arrays.toString(columnasCondicion));
+		System.out.println("datosCondicion[]:"
+				+ Arrays.toString(datosCondicion));
 
 		StringBuffer where = new StringBuffer();
 
 		int nroColumnas = 0;
 		int nroDatos = 0;
 
-		if (columnas != null && datos != null) {
-			nroColumnas = columnas.length;
-			nroDatos = datos.length;
-		}
+		if (columnasCondicion != null && datosCondicion != null) {
+			nroColumnas = columnasCondicion.length;
+			nroDatos = datosCondicion.length;
 
-		if (nroColumnas == nroDatos) {
-			where.append(" WHERE ");
-			for (int i = 0; i < datos.length; i++) {
-				where.append(columnas[i] + "= " + datos[i]);
-				where.append(ConstanteGral.ESPACIO_EN_BLANCO);
+			if (nroColumnas == nroDatos) {
+				where.append(" WHERE ");
+				for (int i = 0; i < datosCondicion.length; i++) {
+					where.append(columnasCondicion[i] + "= "
+							+ datosCondicion[i]);
+					where.append(ConstanteGral.ESPACIO_EN_BLANCO);
 
-				if (i != datos.length - 1) {
-					where.append(operadorLogicoSQL);
+					if (i != datosCondicion.length - 1) {
+						where.append(operadorLogicoSQL);
+					}
 				}
+
+			} else {
+				System.out
+						.println("el numero de elementos de los arreglos son DISTINTOS");
 			}
 
 		} else {
-			System.out
-					.println("el numero de elementos de los arreglos son DISTINTOS");
+			System.out.println("Datos nulos");
 		}
 
 		return where.toString();
@@ -190,7 +200,7 @@ public class UtilDao extends ConfiguracionDB {
 			}
 
 			if (conexion != null) {
-				System.out.println("Cerrando Conexion...");
+				System.out.println("CONEXION CERRADA");
 				conexion.close();
 			}
 		}
@@ -225,8 +235,6 @@ public class UtilDao extends ConfiguracionDB {
 					nombreTabla, where };
 			String querySelect = UtilBO.cambioValores(queryDefault, datos);
 
-			System.out.println("querySelect:" + querySelect);
-
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
@@ -249,7 +257,7 @@ public class UtilDao extends ConfiguracionDB {
 					rs.close();
 				}
 				if (conexion != null) {
-					System.out.println("Cerrando Conexion...");
+					System.out.println("CONEXION CERRADA");
 					conexion.close();
 				}
 			}
@@ -284,8 +292,6 @@ public class UtilDao extends ConfiguracionDB {
 
 			String querySelect = UtilBO.cambioValores(queryDefault, datos);
 
-			System.out.println("querySelect:" + querySelect);
-
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
@@ -307,7 +313,7 @@ public class UtilDao extends ConfiguracionDB {
 					rs.close();
 				}
 				if (conexion != null) {
-					System.out.println("Cerrando Conexion...");
+					System.out.println("CONEXION CERRADA");
 					conexion.close();
 				}
 			}

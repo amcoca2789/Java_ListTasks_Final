@@ -30,7 +30,6 @@ public class UsuarioDao {
 		if (conexion != null) {
 
 			if (u != null) {
-				System.out.println("USUARIO:" + u);
 				if (!u.isVacio()) {
 
 					String nombreEsquemaDB = cnxBD.getNameBD();
@@ -88,7 +87,7 @@ public class UsuarioDao {
 							ps.close();
 						}
 						if (conexion != null) {
-							System.out.println("Cerrando Conexion...");
+							System.out.println("CONEXION CERRADA");
 							conexion.close();
 						}
 					}

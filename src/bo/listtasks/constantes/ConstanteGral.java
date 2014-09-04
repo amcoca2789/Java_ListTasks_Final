@@ -19,5 +19,6 @@ public class ConstanteGral {
 	public static final String OBJETO_TAREA = "TAREA";
 	public static final String COMA = " , ";
 	public static final String CREACION = "creacion";
+	public static final String ALL_CAMPOS = " * ";
 
 }

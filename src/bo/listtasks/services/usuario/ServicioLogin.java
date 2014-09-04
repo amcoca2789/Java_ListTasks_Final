@@ -61,8 +61,6 @@ public class ServicioLogin extends HttpServlet {
 			u.setCodigoUsuario(codigoUsuario);
 			u.setPasswordUsuario(passwordUsuario);
 
-			System.out.println("USUARIO:" + u);
-
 			String[] columnasDelSelect = { ConstanteUsuario.CODIGO };
 			String[] columnasDeCondicion = { ConstanteUsuario.CODIGO,
 					ConstanteUsuario.PASSWORD };
@@ -86,8 +84,6 @@ public class ServicioLogin extends HttpServlet {
 					nombreColumna, tipoDeDatoColumna, columnasDeCondicion,
 					datosAUtilizar, tipoDatos, operadorLogicoSQL);
 
-			System.out.println("idUsuario:" + idUsuario);
-
 			if (isExisteUsuario && idUsuario != null) {
 				System.out.println("Usuario valido...");
 
@@ -106,11 +102,6 @@ public class ServicioLogin extends HttpServlet {
 					session.setAttribute(ConstanteGral.SESION_OBJETO_USUARIO, u);
 					session.setMaxInactiveInterval(30 * 60); // 30min
 
-					System.out.println("Creada: "
-							+ new Date(session.getCreationTime()));
-					System.out.println("Eliminada/Cerrada: "
-							+ new Date(session.getLastAccessedTime()));
-					System.out.println("Id Sesion: " + session.getId());
 				} else {
 					System.out.println("No se pudo iniciar sesion...");
 				}
@@ -122,7 +113,6 @@ public class ServicioLogin extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("Redireccionando a -> " + url_destino);
 			RequestDispatcher dispatcher = request
 					.getRequestDispatcher(url_destino);
 			dispatcher.forward(request, response);

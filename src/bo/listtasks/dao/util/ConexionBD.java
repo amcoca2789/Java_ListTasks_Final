@@ -209,7 +209,6 @@ public class ConexionBD {
 
 				conexion = DriverManager.getConnection(url, this.usuarioBD,
 						this.passwordBD);
-				System.out.println("Exito... conexion");
 
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -226,6 +225,7 @@ public class ConexionBD {
 	public void cerrarConexion() {
 		try {
 			if (this.conexion != null && !this.conexion.isClosed()) {
+				System.out.println("CONEXION CERRADA");
 				this.conexion.close();
 			}
 		} catch (SQLException e) {

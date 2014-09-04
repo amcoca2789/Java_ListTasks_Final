@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -184,6 +185,9 @@ public class UtilBO {
 	public static String[] convertirDatosADatosSQL(String[] tipoDatos,
 			String[] datos) {
 
+		System.out.println("tipoDatos[]:" + Arrays.toString(tipoDatos));
+		System.out.println("datos[]:" + Arrays.toString(datos));
+
 		String[] datosConvertidos = null;
 
 		if (datos != null && datos.length > 0 && tipoDatos != null
@@ -194,6 +198,14 @@ public class UtilBO {
 			for (int i = 0; i < tipoDatos.length; i++) {
 				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
 					datosConvertidos[i] = "'" + datos[i] + "'";
+				} else if (ConstanteGral.TIPO_DATE.equals(tipoDatos[i])) {
+					Date fechaAux = UtilBO.convertStringToDate(datos[i]);
+					Calendar fechaCalend = Calendar.getInstance();
+					fechaCalend.setTime(fechaAux);
+					datosConvertidos[i] = UtilBO
+							.convertCalendarToDateOracle(fechaCalend);
+				} else if (ConstanteGral.TIPO_NUMBER.equals(tipoDatos[i])) {
+					datosConvertidos[i] = datos[i];
 				}
 			}
 		} else {

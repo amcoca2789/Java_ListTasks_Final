@@ -57,7 +57,7 @@ public class Tarea {
 		UtilBO uBo = new UtilBO();
 
 		String fechaRealizacionTareaStr = uBo
-				.convertirCalendarToString(fechaRealizacionTarea);
+				.convertirCalendarToStringFechaYTiempo(fechaRealizacionTarea);
 		StringBuilder builder = new StringBuilder();
 		builder.append("Tarea [idTarea=");
 		builder.append(idTarea);

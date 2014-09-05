@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +48,7 @@ public class TareaDao {
 
 					UtilBO utilBo = new UtilBO();
 					String fechaRealizacionStr = utilBo
-							.convertirCalendarToString(fechaRealizacion);
+							.convertirCalendarToStringFechaYTiempo(fechaRealizacion);
 
 					String idUsuarioStr = String.valueOf(idUsuario);
 
@@ -61,8 +62,13 @@ public class TareaDao {
 							ConstanteTarea.IDUSUARIO,
 							ConstanteTarea.ESTADOTAREA };
 
+					System.out.println("datosARegistrar:"
+							+ Arrays.toString(datosARegistrar));
 					String[] datosAUtilizarConvertidos = utilBo
 							.convertirDatosADatosSQL(tipoDatos, datosARegistrar);
+
+					System.out.println("datosAUtilizarConvertidos:"
+							+ Arrays.toString(datosAUtilizarConvertidos));
 
 					String datosARegistrarStr = UtilBO
 							.convertirArrayToStringSeparadoCaracter(
@@ -130,7 +136,6 @@ public class TareaDao {
 		if (conexion != null) {
 
 			if (usuario != null) {
-				System.out.println("obtenerTareasUsuario->usuario->" + usuario);
 				tareasUsuario = new ArrayList<Tarea>();
 
 				int idUsuario = usuario.getIdUsuario();
@@ -222,16 +227,28 @@ public class TareaDao {
 
 	public List<Tarea> filtrarTareasPorFecha(List<Tarea> tareas,
 			Calendar fechaFiltro) {
+
+		System.out.println("...filtrarTareasPorFecha....");
+
 		List<Tarea> tareasFiltradas = null;
 
 		if (tareas != null) {
 			if (fechaFiltro != null) {
+				UtilBO uBo = new UtilBO();
+				String fechaFiltroStr = uBo
+						.convertirCalendarToStringFecha(fechaFiltro);
 				tareasFiltradas = new ArrayList<Tarea>();
 				for (Tarea tarea : tareas) {
-					if (fechaFiltro.equals(tarea.getFechaRealizacionTarea())) {
+					Calendar fechaRealizacion = tarea
+							.getFechaRealizacionTarea();
+					String fechaRealizacionStr = uBo
+							.convertirCalendarToStringFecha(fechaRealizacion);
+
+					if (fechaFiltroStr.equals(fechaRealizacionStr)) {
 						tareasFiltradas.add(tarea);
 					}
 				}
+
 			} else {
 				System.out.println("La fecha Filtro es nula");
 				return tareas;
@@ -242,5 +259,100 @@ public class TareaDao {
 		}
 
 		return tareasFiltradas;
+	}
+
+	public boolean edicionTarea(Tarea t) throws SQLException {
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+
+			if (t != null) {
+				if (!t.isVacio()) {
+
+					String nombreEsquemaDB = cnxBD.getNameBD();
+					String nombreTabla = ConstanteNombreTabla.TAREA;
+
+					int idTarea = t.getIdTarea();
+					String descripcionTarea = t.getDescripcionTarea();
+					Calendar fechaRealizacion = t.getFechaRealizacionTarea();
+					String idTareaStr = String.valueOf(idTarea);
+
+					UtilBO utilBo = new UtilBO();
+					UtilDao utilDao = new UtilDao();
+					String fechaRealizacionStr = utilBo
+							.convertirCalendarToStringFechaYTiempo(fechaRealizacion);
+
+					String queryDefault = ConstanteQueriesDB.UPDATE_CON_RESTRICCION;
+					/** Where */
+					String[] nombresColumnasCondicion = { ConstanteTarea.IDTAREA };
+					String[] datosCondicion = { idTareaStr };
+					String whereUpdate = utilDao.construirWhere(
+							nombresColumnasCondicion, datosCondicion,
+							ConstanteGral.OPERADOR_AND);
+					/** setUpdate */
+					String[] nombreColumnasActualizar = {
+							ConstanteTarea.DESCRIPCION,
+							ConstanteTarea.FECHAREALIZ };
+					String[] tiposColumnasActualizar = {
+							ConstanteGral.TIPO_VARCHAR2,
+							ConstanteGral.TIPO_DATE };
+					String[] datosToActualizar = { descripcionTarea,
+							fechaRealizacionStr };
+					System.out.println("datosToActualizar:"
+							+ Arrays.toString(datosToActualizar));
+					String[] datosToActualizarConvertidos = utilBo
+							.convertirDatosADatosSQL(tiposColumnasActualizar,
+									datosToActualizar);
+					System.out.println("datosToActualizarConvertidos:"
+							+ Arrays.toString(datosToActualizarConvertidos));
+					String setUpdate = utilDao.construirSetUpdate(
+							nombreColumnasActualizar,
+							datosToActualizarConvertidos);
+					/** datosUpdateTarea */
+					String[] datosUpdateTarea = { nombreEsquemaDB, nombreTabla,
+							setUpdate, whereUpdate };
+
+					String queryUpdate = UtilBO.cambioValores(queryDefault,
+							datosUpdateTarea);
+
+					System.out.println("queryUpdate:" + queryUpdate);
+
+					PreparedStatement ps = null;
+
+					try {
+						ps = conexion.prepareStatement(queryUpdate);
+						int resultado = ps.executeUpdate();
+
+						if (resultado == 1) {
+							System.out
+									.println("Se modifico el registro correctamente...");
+							return true;
+						}
+						return false;
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						if (ps != null) {
+							ps.close();
+						}
+						if (conexion != null) {
+							System.out.println("CONEXION CERRADA");
+							conexion.close();
+						}
+					}
+				} else {
+					System.out.println("OBJETO VACIO");
+				}
+
+			} else {
+				System.out.println("El OBJETO es nulo");
+			}
+		} else {
+			System.out.println("No se obtuvo conexion");
+		}
+
+		return false;
 	}
 }

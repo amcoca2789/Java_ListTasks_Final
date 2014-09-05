@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteQueriesDB;
@@ -116,27 +115,22 @@ public class UtilDao extends ConfiguracionDB {
 		return namesColumnasTask;
 	}
 
-	public String construirWhere(String[] columnasCondicion,
+	public String construirWhere(String[] nombresColumnasCondicion,
 			String[] datosCondicion, String operadorLogicoSQL) {
-
-		System.out.println("columnasCondicion[]:"
-				+ Arrays.toString(columnasCondicion));
-		System.out.println("datosCondicion[]:"
-				+ Arrays.toString(datosCondicion));
 
 		StringBuffer where = new StringBuffer();
 
 		int nroColumnas = 0;
 		int nroDatos = 0;
 
-		if (columnasCondicion != null && datosCondicion != null) {
-			nroColumnas = columnasCondicion.length;
+		if (nombresColumnasCondicion != null && datosCondicion != null) {
+			nroColumnas = nombresColumnasCondicion.length;
 			nroDatos = datosCondicion.length;
 
 			if (nroColumnas == nroDatos) {
 				where.append(" WHERE ");
 				for (int i = 0; i < datosCondicion.length; i++) {
-					where.append(columnasCondicion[i] + "= "
+					where.append(nombresColumnasCondicion[i] + "= "
 							+ datosCondicion[i]);
 					where.append(ConstanteGral.ESPACIO_EN_BLANCO);
 
@@ -324,4 +318,33 @@ public class UtilDao extends ConfiguracionDB {
 		return dato;
 	}
 
+	public String construirSetUpdate(String[] nombreColumnasActualizar,
+			String[] datosToActualizar) {
+
+		StringBuffer datosSet = new StringBuffer();
+
+		if (nombreColumnasActualizar != null && datosToActualizar != null) {
+			int nroColumnas = nombreColumnasActualizar.length;
+			int nroDatos = datosToActualizar.length;
+
+			if (nroColumnas == nroDatos) {
+				for (int i = 0; i < nombreColumnasActualizar.length; i++) {
+					if (i == nombreColumnasActualizar.length - 1) {
+						datosSet.append(" , ");
+					}
+					datosSet.append(nombreColumnasActualizar[i]);
+					datosSet.append("=");
+					datosSet.append(datosToActualizar[i]);
+
+				}
+			} else {
+				System.out.println("nro de elementos desiguales");
+			}
+
+		} else {
+			System.out.println("Los parametros de entradas nulos");
+		}
+
+		return datosSet.toString();
+	}
 }

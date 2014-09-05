@@ -8,4 +8,6 @@ public class ConstanteQueriesDB {
 	public static final String INSERT = "INSERT INTO {0}.{1} ({2}) VALUES ({3})";
 	public static final String FORMATO_DATE_ORACLE = "'YYYY-MM-DD HH24:MI:SS'";
 	public static final String ESTRUCTURA_DATE_ORACLE = "TO_DATE({0}, {1})";
+	public static final String UPDATE_CON_RESTRICCION = "UPDATE {0}.{1} SET {2} {3}";
+	public static final String UPDATE_SIN_RESTRICCION = "UPDATE {0}.{1} SET {2}";
 }

@@ -5,7 +5,6 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -64,10 +63,10 @@ public class UtilBO {
 		String[] datosTiempo = UtilBO
 				.convertCalendarTiempoToArreglo(fechaHoraInicio);
 
-		String fecha = UtilBO.cambioValores(ConstanteGral.FORMATO_FECHA_1,
+		String fecha = UtilBO.cambioValores(ConstanteGral.ESTRUCTURA_FECHA_1,
 				datosFecha);
 
-		String tiempo = UtilBO.cambioValores(ConstanteGral.FORMATO_TIEMPO_1,
+		String tiempo = UtilBO.cambioValores(ConstanteGral.ESTRUCTURA_TIEMPO_1,
 				datosTiempo);
 
 		String fechaTiempo = "'" + fecha + ConstanteGral.ESPACIO_EN_BLANCO
@@ -87,7 +86,7 @@ public class UtilBO {
 			salida = new String[3];
 
 			int year = fechaHoraInicio.get(Calendar.YEAR);
-			int month = fechaHoraInicio.get(Calendar.MONTH); // Jan = 0, dec =
+			int month = fechaHoraInicio.get(Calendar.MONTH) + 1; // Jan = 0, dec
 			int dayOfMonth = fechaHoraInicio.get(Calendar.DAY_OF_MONTH);
 
 			salida[0] = Integer.toString(year);
@@ -109,9 +108,23 @@ public class UtilBO {
 			int minute = fechaHoraInicio.get(Calendar.MINUTE);
 			int second = fechaHoraInicio.get(Calendar.SECOND);
 
-			salida[0] = Integer.toString(hourOfDay);
-			salida[1] = Integer.toString(minute);
-			salida[2] = Integer.toString(second);
+			String hourOfDayStr = Integer.toString(hourOfDay); // 24
+			String minuteStr = Integer.toString(minute);
+			String secondStr = Integer.toString(second);
+
+			if (ConstanteGral.CADENA_NUMERO_CERO.equals(hourOfDayStr)) {
+				hourOfDayStr += ConstanteGral.CADENA_NUMERO_CERO;
+			}
+			if (ConstanteGral.CADENA_NUMERO_CERO.equals(minuteStr)) {
+				minuteStr += ConstanteGral.CADENA_NUMERO_CERO;
+			}
+			if (ConstanteGral.CADENA_NUMERO_CERO.equals(secondStr)) {
+				secondStr += ConstanteGral.CADENA_NUMERO_CERO;
+			}
+
+			salida[0] = hourOfDayStr;
+			salida[1] = minuteStr;
+			salida[2] = secondStr;
 		}
 
 		return salida;
@@ -164,9 +177,6 @@ public class UtilBO {
 
 	public Date convertStringToDate(String fecha) {
 
-		System.out.println("convertStringToDate ("
-				+ ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1 + ")->fecha:" + fecha);
-
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1);
 
@@ -187,9 +197,6 @@ public class UtilBO {
 
 	public String[] convertirDatosADatosSQL(String[] tipoDatos, String[] datos) {
 
-		System.out.println("tipoDatos[]:" + Arrays.toString(tipoDatos));
-		System.out.println("datos[]:" + Arrays.toString(datos));
-
 		String[] datosConvertidos = null;
 
 		if (datos != null && datos.length > 0 && tipoDatos != null
@@ -198,15 +205,17 @@ public class UtilBO {
 			datosConvertidos = new String[datos.length];
 
 			for (int i = 0; i < tipoDatos.length; i++) {
-				System.out.println("datos[i]=" + datos[i]);
 				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
 					datosConvertidos[i] = "'" + datos[i] + "'";
 				} else if (ConstanteGral.TIPO_DATE.equals(tipoDatos[i])) {
+					System.out.println("datos[i]:" + datos[i]);
 					Date fechaAux = this.convertStringToDate(datos[i]);
+					System.out.println("fechaAux:" + fechaAux);
 					Calendar fechaCalend = Calendar.getInstance();
 					fechaCalend.setTime(fechaAux);
 					datosConvertidos[i] = UtilBO
 							.convertCalendarToDateOracle(fechaCalend);
+
 				} else if (ConstanteGral.TIPO_NUMBER.equals(tipoDatos[i])) {
 					datosConvertidos[i] = datos[i];
 				}
@@ -218,7 +227,7 @@ public class UtilBO {
 		return datosConvertidos;
 	}
 
-	public List<Calendar> obtenerSemana(Calendar fecha) {
+	public List<Calendar> obtenerDiasDeLaSemana(Calendar fecha) {
 
 		List<Calendar> listaFechasSemana = null;
 
@@ -283,7 +292,7 @@ public class UtilBO {
 		return nombreDia;
 	}
 
-	public String convertirCalendarToString(Calendar fecha) {
+	public String convertirCalendarToStringFechaYTiempo(Calendar fecha) {
 
 		String salida = ConstanteGral.SIN_DATOS;
 
@@ -300,24 +309,6 @@ public class UtilBO {
 		return salida;
 	}
 
-	public static void main(String[] args) {
-
-		UtilBO uBo = new UtilBO();
-		Calendar fecha = Calendar.getInstance();
-		fecha.set(2014, Calendar.SEPTEMBER, 17);
-		System.out.println("main:" + uBo.convertirCalendarToString(fecha));
-		List<Calendar> fechas = uBo.obtenerSemana(fecha);
-
-		if (fechas != null) {
-			for (Calendar fechaX : fechas) {
-				System.out.println(uBo.convertirCalendarToString(fechaX));
-			}
-		} else {
-			System.out.println("Lista vacia");
-		}
-
-	}
-
 	public Calendar convertStringToCalendar(String fechaRealizacionStr) {
 
 		Date fecha = this.convertStringToDate(fechaRealizacionStr);
@@ -330,5 +321,31 @@ public class UtilBO {
 		}
 
 		return calendario;
+	}
+
+	public String convertirCalendarToStringFecha(Calendar fecha) {
+		String salida = ConstanteGral.SIN_DATOS;
+
+		if (fecha != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					ConstanteGral.FORMATO_FECHA_1);
+
+			salida = sdf.format(fecha.getTime());
+
+		} else {
+			System.out.println("Fecha nula");
+		}
+
+		return salida;
+	}
+
+	public static void main(String[] args) {
+		UtilBO uBo = new UtilBO();
+		String fecha = "2014-12-30 00:00:01";
+		System.out.println(uBo.convertStringToDate(fecha));
+		Date fechaRealizacion = uBo.convertStringToDate(fecha);
+		Calendar c = Calendar.getInstance();
+		c.setTime(fechaRealizacion);
+		System.out.println(uBo.convertirCalendarToStringFechaYTiempo(c));
 	}
 }

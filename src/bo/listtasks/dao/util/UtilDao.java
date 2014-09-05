@@ -225,7 +225,8 @@ public class UtilDao extends ConfiguracionDB {
 
 			String queryDefault = ConstanteQueriesDB.SELECT_CON_RESTRICCION;
 
-			String[] datosAUtilizarConvertidos = UtilBO
+			UtilBO utilBo = new UtilBO();
+			String[] datosAUtilizarConvertidos = utilBo
 					.convertirDatosADatosSQL(tipoDatos, datosAUtilizar);
 
 			String where = this.construirWhere(columnasDeCondicion,
@@ -281,7 +282,8 @@ public class UtilDao extends ConfiguracionDB {
 
 			String queryDefault = ConstanteQueriesDB.SELECT_CON_RESTRICCION;
 
-			String[] datosAUtilizarConvertidos = UtilBO
+			UtilBO utilBo = new UtilBO();
+			String[] datosAUtilizarConvertidos = utilBo
 					.convertirDatosADatosSQL(tipoDatos, datosAUtilizar);
 
 			String where = this.construirWhere(columnasDeCondicion,

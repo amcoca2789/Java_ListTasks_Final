@@ -7,8 +7,8 @@
 <%@ page import="bo.listtasks.dto.usuario.Usuario"%>
 <%@ page import="bo.listtasks.dto.tarea.Tarea"%>
 <%@ page import="bo.listtasks.dao.tarea.TareaDao"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%
 	HttpSession sesionUsuario = request.getSession();
    
@@ -82,6 +82,8 @@
 	rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/vendor/jquery-ui/all.css">
 <link rel="stylesheet" href="css/vendor/jquery-ui/theme.css">
+<link rel="stylesheet"
+	href="css/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.css">
 <link rel="stylesheet" href="css/vendor/normalize/normalize.css">
 <link rel="stylesheet" href="css/estilos.css">
 </head>
@@ -156,16 +158,16 @@
 
 			<%
 				if(listaTareas!=null){
-											for(Tarea tarea: listaTareas){
+												for(Tarea tarea: listaTareas){
 			%>
 			<!-- ************************* [INICIO] Plantilla Tarea *********************** -->
 			<%
 				String descripcionTarea = tarea.getDescripcionTarea();
-												String idBotonera = "dia"+nroDia+"-"+"tarea"+nroTarea;
-												String idBotonEdicion = "btn-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-												String idFormEdicion = "form-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-												String nameIdCajaDescripcionEdicion ="caja_descripcion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
-												String nameIdCajaFechaRealizEdicion ="caja_fecharealizacion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
+													String idBotonera = "dia"+nroDia+"-"+"tarea"+nroTarea;
+													String idBotonEdicion = "btn-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
+													String idFormEdicion = "form-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
+													String nameIdCajaDescripcionEdicion ="caja_descripcion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
+													String nameIdCajaFechaRealizEdicion ="caja_fecharealizacion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
 			%>
 			<div class="calendario-dia-botonera" id="<%=idBotonera%>">
 				<ul class="calendario-dia-botonera-lista">
@@ -217,23 +219,27 @@
 			</form>
 			<!-- ************************* [FIN] Plantilla Tarea *********************** -->
 			<%
-											nroTarea++;
+				nroTarea++;
+											}
+										}else{
+												System.out.println("No existe tareas");
 										}
-									}else{
-											System.out.println("No existe tareas");
-									}
 			%>
 		</div>
 	</section>
 	<footer class="contacto">
 		<h2 class="contacto-titulo2 u-titulo-2">Contacto</h2>
-		<h3 class="contacto-titulo3 u-titulo-3">AMROSOFT 2014 ®</h3>
+		<h3 class="contacto-titulo3 u-titulo-3">AMROSOFT 2014 Â®</h3>
 	</footer>
 	<!-- JavaScript -->
 	<script src="js/vendor/jquery/jquery.js">
 		;
 	</script>
 	<script src="js/vendor/jquery-ui/jquery-ui.js">
+		;
+	</script>
+	<script
+		src="js/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.js">
 		;
 	</script>
 	<script src="js/general.min.js">

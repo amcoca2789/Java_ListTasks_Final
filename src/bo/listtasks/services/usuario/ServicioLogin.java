@@ -89,7 +89,7 @@ public class ServicioLogin extends HttpServlet {
 
 				u.setIdUsuario(Integer.parseInt(idUsuario));
 
-				HttpSession session = request.getSession(true);
+				HttpSession session = request.getSession(false);
 
 				if (session != null) {
 					url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;

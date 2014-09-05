@@ -162,7 +162,10 @@ public class UtilBO {
 		return arregloDatos;
 	}
 
-	public static Date convertStringToDate(String fecha) {
+	public Date convertStringToDate(String fecha) {
+
+		System.out.println("convertStringToDate ("
+				+ ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1 + ")->fecha:" + fecha);
 
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1);
@@ -182,8 +185,7 @@ public class UtilBO {
 		return fechaParseada;
 	}
 
-	public static String[] convertirDatosADatosSQL(String[] tipoDatos,
-			String[] datos) {
+	public String[] convertirDatosADatosSQL(String[] tipoDatos, String[] datos) {
 
 		System.out.println("tipoDatos[]:" + Arrays.toString(tipoDatos));
 		System.out.println("datos[]:" + Arrays.toString(datos));
@@ -196,10 +198,11 @@ public class UtilBO {
 			datosConvertidos = new String[datos.length];
 
 			for (int i = 0; i < tipoDatos.length; i++) {
+				System.out.println("datos[i]=" + datos[i]);
 				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
 					datosConvertidos[i] = "'" + datos[i] + "'";
 				} else if (ConstanteGral.TIPO_DATE.equals(tipoDatos[i])) {
-					Date fechaAux = UtilBO.convertStringToDate(datos[i]);
+					Date fechaAux = this.convertStringToDate(datos[i]);
 					Calendar fechaCalend = Calendar.getInstance();
 					fechaCalend.setTime(fechaAux);
 					datosConvertidos[i] = UtilBO
@@ -285,11 +288,10 @@ public class UtilBO {
 		String salida = ConstanteGral.SIN_DATOS;
 
 		if (fecha != null) {
-			int dia = fecha.get(Calendar.DATE);
-			int mes = fecha.get(Calendar.MONTH);
-			int year = fecha.get(Calendar.YEAR);
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					ConstanteGral.FORMATO_FECHA_Y_TIEMPO_1);
 
-			salida = dia + "/" + mes + "/" + year;
+			salida = sdf.format(fecha.getTime());
 
 		} else {
 			System.out.println("Fecha nula");
@@ -314,5 +316,19 @@ public class UtilBO {
 			System.out.println("Lista vacia");
 		}
 
+	}
+
+	public Calendar convertStringToCalendar(String fechaRealizacionStr) {
+
+		Date fecha = this.convertStringToDate(fechaRealizacionStr);
+		Calendar calendario = null;
+		if (fecha != null) {
+			calendario = Calendar.getInstance();
+			calendario.setTime(fecha);
+		} else {
+			System.out.println("fecha nula");
+		}
+
+		return calendario;
 	}
 }

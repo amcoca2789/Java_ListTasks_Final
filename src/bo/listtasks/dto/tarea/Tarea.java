@@ -10,6 +10,7 @@ public class Tarea {
 	private String descripcionTarea;
 	private Calendar fechaRealizacionTarea;
 	private int idUsuario;
+	private String estadoTarea;
 
 	public int getIdTarea() {
 		return idTarea;
@@ -43,17 +44,31 @@ public class Tarea {
 		this.idUsuario = idUsuario;
 	}
 
+	public String getEstadoTarea() {
+		return estadoTarea;
+	}
+
+	public void setEstadoTarea(String estadoTarea) {
+		this.estadoTarea = estadoTarea;
+	}
+
 	@Override
 	public String toString() {
+		UtilBO uBo = new UtilBO();
+
+		String fechaRealizacionTareaStr = uBo
+				.convertirCalendarToString(fechaRealizacionTarea);
 		StringBuilder builder = new StringBuilder();
 		builder.append("Tarea [idTarea=");
 		builder.append(idTarea);
 		builder.append(", descripcionTarea=");
 		builder.append(descripcionTarea);
 		builder.append(", fechaRealizacionTarea=");
-		builder.append(fechaRealizacionTarea);
+		builder.append(fechaRealizacionTareaStr);
 		builder.append(", idUsuario=");
 		builder.append(idUsuario);
+		builder.append(", estadoTarea=");
+		builder.append(estadoTarea);
 		builder.append("]");
 		return builder.toString();
 	}

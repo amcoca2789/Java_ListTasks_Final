@@ -6,7 +6,12 @@ var name_form_newtarea = "form-newtarea-";
 $(document).ready(function() {
 	$(".u-boton-newtarea").on('click', mostrarFormularioNewTarea);
     $(".u-boton-ediciontarea").on('click', mostrarFormularioEdicionTarea);
-    $( ".u-fecha" ).datepicker({ dateFormat: "yy-mm-dd" });
+    $( ".u-fecha" ).datetimepicker(
+    { 
+    	format:	'Y-m-d H:i:s',
+    	formatTime:'H:i:s',
+		formatDate:'Y/m/d'
+    });
 });
 
 function mostrarFormularioNewTarea (evnt) {

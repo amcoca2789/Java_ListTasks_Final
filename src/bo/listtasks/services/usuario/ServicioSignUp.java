@@ -96,7 +96,7 @@ public class ServicioSignUp extends HttpServlet {
 					UsuarioDao userDao = new UsuarioDao();
 					boolean isAdicionado = userDao.adicionUsuario(u);
 
-					HttpSession session = request.getSession(true);
+					HttpSession session = request.getSession(false);
 
 					if (isAdicionado) {
 						if (session != null) {

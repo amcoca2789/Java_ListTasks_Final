@@ -47,7 +47,9 @@ public class UsuarioDao {
 					String[] columnasInsertar = { ConstanteUsuario.CODIGO,
 							ConstanteUsuario.PASSWORD, ConstanteUsuario.EMAIL };
 
-					String[] datosAUtilizarConvertidos = UtilBO
+					UtilBO utilBo = new UtilBO();
+
+					String[] datosAUtilizarConvertidos = utilBo
 							.convertirDatosADatosSQL(tipoDatos, datosARegistrar);
 
 					String datosARegistrarStr = UtilBO

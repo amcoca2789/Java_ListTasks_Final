@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!-- HTML -->
 <!DOCTYPE html>
 <html lang="en">
@@ -122,12 +122,13 @@
                 Contacto
             </h2>
             <h3 class="contacto-titulo3 u-titulo-3">
-                AMROSOFT 2014 ®
+                AMROSOFT 2014 Â®
             </h3>
         </footer>
         <!-- JavaScript -->
         <script src="js/vendor/jquery/jquery.js">;</script>
         <script src="js/vendor/jquery-ui/jquery-ui.js">;</script>
+        <script src="js/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.js">;</script>
         <script src="js/general.min.js">;</script>
     </body>
 </html>

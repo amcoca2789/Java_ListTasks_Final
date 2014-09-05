@@ -35,7 +35,6 @@ public class TareaDao {
 		if (conexion != null) {
 
 			if (t != null) {
-				System.out.println("TAREA:" + t);
 				if (!t.isVacio()) {
 
 					String nombreEsquemaDB = cnxBD.getNameBD();
@@ -43,21 +42,26 @@ public class TareaDao {
 
 					String descripcionTarea = t.getDescripcionTarea();
 					Calendar fechaRealizacion = t.getFechaRealizacionTarea();
+					String estadoTarea = t.getEstadoTarea();
 					int idUsuario = t.getIdUsuario();
 
-					String fechaRealizacionStr = UtilBO
-							.convertCalendarToDateOracle(fechaRealizacion);
+					UtilBO utilBo = new UtilBO();
+					String fechaRealizacionStr = utilBo
+							.convertirCalendarToString(fechaRealizacion);
+
 					String idUsuarioStr = String.valueOf(idUsuario);
 
 					String[] tipoDatos = { ConstanteGral.TIPO_VARCHAR2,
-							ConstanteGral.TIPO_DATE, ConstanteGral.TIPO_NUMBER };
+							ConstanteGral.TIPO_DATE, ConstanteGral.TIPO_NUMBER,
+							ConstanteGral.TIPO_VARCHAR2 };
 					String[] datosARegistrar = { descripcionTarea,
-							fechaRealizacionStr, idUsuarioStr };
+							fechaRealizacionStr, idUsuarioStr, estadoTarea };
 					String[] columnasInsertar = { ConstanteTarea.DESCRIPCION,
 							ConstanteTarea.FECHAREALIZ,
-							ConstanteTarea.IDUSUARIO };
+							ConstanteTarea.IDUSUARIO,
+							ConstanteTarea.ESTADOTAREA };
 
-					String[] datosAUtilizarConvertidos = UtilBO
+					String[] datosAUtilizarConvertidos = utilBo
 							.convertirDatosADatosSQL(tipoDatos, datosARegistrar);
 
 					String datosARegistrarStr = UtilBO
@@ -138,13 +142,18 @@ public class TareaDao {
 
 				UtilDao utilDao = new UtilDao();
 
-				String[] datosCondicion = { String.valueOf(idUsuario) };
+				String[] datosCondicion = { String.valueOf(idUsuario),
+						ConstanteGral.ESTADO_EN_DESARROLLO };
 
-				String[] tipoColumnasCondicion = { ConstanteGral.TIPO_NUMBER };
+				String[] tipoColumnasCondicion = { ConstanteGral.TIPO_NUMBER,
+						ConstanteGral.TIPO_VARCHAR2 };
 
-				String[] nombresColumnas = { ConstanteTarea.IDUSUARIO };
+				String[] nombresColumnas = { ConstanteTarea.IDUSUARIO,
+						ConstanteTarea.ESTADOTAREA };
 
-				String[] datosCondicionConvertidos = UtilBO
+				UtilBO utilBo = new UtilBO();
+
+				String[] datosCondicionConvertidos = utilBo
 						.convertirDatosADatosSQL(tipoColumnasCondicion,
 								datosCondicion);
 				String where = utilDao.construirWhere(nombresColumnas,
@@ -155,7 +164,7 @@ public class TareaDao {
 				String querySelect = UtilBO.cambioValores(queryDefault,
 						datosSQL);
 
-				System.out.println("queryInsert:" + querySelect);
+				System.out.println("querySelect:" + querySelect);
 
 				PreparedStatement ps = null;
 				ResultSet rs = null;
@@ -169,7 +178,8 @@ public class TareaDao {
 						String descripcionTarea = rs.getString(2);
 
 						String fechaRealizacionTareaStr = rs.getString(3);
-						Date fechaRealizacionTareaDate = UtilBO
+
+						Date fechaRealizacionTareaDate = utilBo
 								.convertStringToDate(fechaRealizacionTareaStr);
 						Calendar fechaRealizacionTarea = Calendar.getInstance();
 						fechaRealizacionTarea

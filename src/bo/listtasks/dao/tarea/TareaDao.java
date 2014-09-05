@@ -62,13 +62,8 @@ public class TareaDao {
 							ConstanteTarea.IDUSUARIO,
 							ConstanteTarea.ESTADOTAREA };
 
-					System.out.println("datosARegistrar:"
-							+ Arrays.toString(datosARegistrar));
 					String[] datosAUtilizarConvertidos = utilBo
 							.convertirDatosADatosSQL(tipoDatos, datosARegistrar);
-
-					System.out.println("datosAUtilizarConvertidos:"
-							+ Arrays.toString(datosAUtilizarConvertidos));
 
 					String datosARegistrarStr = UtilBO
 							.convertirArrayToStringSeparadoCaracter(
@@ -228,21 +223,20 @@ public class TareaDao {
 	public List<Tarea> filtrarTareasPorFecha(List<Tarea> tareas,
 			Calendar fechaFiltro) {
 
-		System.out.println("...filtrarTareasPorFecha....");
-
 		List<Tarea> tareasFiltradas = null;
 
 		if (tareas != null) {
 			if (fechaFiltro != null) {
 				UtilBO uBo = new UtilBO();
-				String fechaFiltroStr = uBo
-						.convertirCalendarToStringFecha(fechaFiltro);
+				String fechaFiltroStr = uBo.convertirCalendarToStringFecha(
+						fechaFiltro, ConstanteGral.FORMATO_FECHA_1);
 				tareasFiltradas = new ArrayList<Tarea>();
 				for (Tarea tarea : tareas) {
 					Calendar fechaRealizacion = tarea
 							.getFechaRealizacionTarea();
 					String fechaRealizacionStr = uBo
-							.convertirCalendarToStringFecha(fechaRealizacion);
+							.convertirCalendarToStringFecha(fechaRealizacion,
+									ConstanteGral.FORMATO_FECHA_1);
 
 					if (fechaFiltroStr.equals(fechaRealizacionStr)) {
 						tareasFiltradas.add(tarea);

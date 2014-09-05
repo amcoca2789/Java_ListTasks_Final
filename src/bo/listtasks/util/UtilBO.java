@@ -208,9 +208,7 @@ public class UtilBO {
 				if (ConstanteGral.TIPO_VARCHAR2.equals(tipoDatos[i])) {
 					datosConvertidos[i] = "'" + datos[i] + "'";
 				} else if (ConstanteGral.TIPO_DATE.equals(tipoDatos[i])) {
-					System.out.println("datos[i]:" + datos[i]);
 					Date fechaAux = this.convertStringToDate(datos[i]);
-					System.out.println("fechaAux:" + fechaAux);
 					Calendar fechaCalend = Calendar.getInstance();
 					fechaCalend.setTime(fechaAux);
 					datosConvertidos[i] = UtilBO
@@ -323,12 +321,11 @@ public class UtilBO {
 		return calendario;
 	}
 
-	public String convertirCalendarToStringFecha(Calendar fecha) {
+	public String convertirCalendarToStringFecha(Calendar fecha, String formato) {
 		String salida = ConstanteGral.SIN_DATOS;
 
 		if (fecha != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					ConstanteGral.FORMATO_FECHA_1);
+			SimpleDateFormat sdf = new SimpleDateFormat(formato);
 
 			salida = sdf.format(fecha.getTime());
 
@@ -346,6 +343,7 @@ public class UtilBO {
 		Date fechaRealizacion = uBo.convertStringToDate(fecha);
 		Calendar c = Calendar.getInstance();
 		c.setTime(fechaRealizacion);
-		System.out.println(uBo.convertirCalendarToStringFechaYTiempo(c));
+		System.out.println(uBo.convertirCalendarToStringFecha(c,
+				ConstanteGral.FORMATO_FECHA_2));
 	}
 }

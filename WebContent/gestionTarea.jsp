@@ -163,7 +163,7 @@
 					
 					if(fechaFiltro!=null){
 						nombreDia = utilBo.obtenerNombreDia(fechaFiltro);
-						fechaDia = utilBo.convertirCalendarToStringFechaYTiempo(fechaFiltro);
+						fechaDia = utilBo.convertirCalendarToStringFecha(fechaFiltro, ConstanteGral.FORMATO_FECHA_2);
 					}
 		%>
 
@@ -175,7 +175,6 @@
 			<%
 				if(listaTareas!=null){
 								List<Tarea> listaTareasFiltradas = tareaDao.filtrarTareasPorFecha(listaTareas, fechaFiltro);
-								System.out.println("listaTareasFiltradas.size(): "+listaTareasFiltradas.size());
 														for(Tarea tarea: listaTareasFiltradas){
 			%>
 			<!-- ************************* [INICIO] Plantilla Tarea *********************** -->

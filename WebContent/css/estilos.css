@@ -76,6 +76,11 @@
   font-size: 2em;
   width: 100%;
 }
+.u-parrafo {
+  color: #fff;
+  font-family: 'Exo 2';
+  font-size: 1em;
+}
 .u-pintar-azul-1 {
   background-color: #006ddb;
   color: #fff;
@@ -611,8 +616,11 @@
   border: 2px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
+  display: inline-block;
   margin: 0;
   padding: 5px;
+  vertical-align: top;
+  width: 13%;
 }
 .calendario-dia-detalle {
   display: block;
@@ -821,4 +829,34 @@
 }
 .newtarea-formulario-titulo3 {
   text-align: center;
+}
+@media screen and (min-width: 780px) and (max-width: 1024px) {
+  .calendario {
+    margin: 0;
+  }
+  .calendario-dia {
+    display: block;
+    margin: 5px 0 5px 0;
+    width: auto;
+  }
+}
+@media screen and (min-width: 480px) and (max-width: 780px) {
+  .calendario {
+    margin: 0;
+  }
+  .calendario-dia {
+    display: block;
+    margin: 5px 0 5px 0;
+    width: auto;
+  }
+}
+@media screen and (max-width: 480px) {
+  .calendario {
+    margin: 0;
+  }
+  .calendario-dia {
+    display: block;
+    margin: 5px 0 5px 0;
+    width: auto;
+  }
 }

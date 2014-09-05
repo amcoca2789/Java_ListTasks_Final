@@ -64,8 +64,6 @@ public class ServicioCreacionTarea extends HttpServlet {
 			UtilBO utilBo = new UtilBO();
 
 			try {
-				System.out
-						.println("fechaRealizacionStr:" + fechaRealizacionStr);
 				Calendar fechaRealizacionTarea = utilBo
 						.convertStringToCalendar(fechaRealizacionStr);
 

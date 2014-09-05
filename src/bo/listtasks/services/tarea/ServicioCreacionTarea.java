@@ -57,9 +57,9 @@ public class ServicioCreacionTarea extends HttpServlet {
 					.getAttribute(ConstanteUsuario.IDUSUARIO));
 
 			String descripcionTarea = request
-					.getParameter("caja_descripcion_creacion_dia1_tarea1");
+					.getParameter("caja_descripcion_creacion");
 			String fechaRealizacionStr = request
-					.getParameter("caja_fecharealizacion_creacion_dia1_tarea1");
+					.getParameter("caja_fecharealizacion_creacion");
 
 			UtilBO utilBo = new UtilBO();
 

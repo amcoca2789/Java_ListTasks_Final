@@ -1,16 +1,19 @@
-<%@page import="bo.listtasks.dao.usuario.UsuarioDao"%>
-<%@ page import="java.util.List"%>
+<%@ page import="java.util.Calendar"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
 <%@ page import="javax.servlet.RequestDispatcher"%>
+<%@page import="bo.listtasks.dao.usuario.UsuarioDao"%>
 <%@ page import="bo.listtasks.constantes.ConstanteGral"%>
 <%@ page import="bo.listtasks.constantes.ConstantesRutasServlet"%>
 <%@ page import="bo.listtasks.dto.usuario.Usuario"%>
 <%@ page import="bo.listtasks.dto.tarea.Tarea"%>
 <%@ page import="bo.listtasks.dao.tarea.TareaDao"%>
+<%@ page import="bo.listtasks.util.UtilBO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
 	HttpSession sesionUsuario = request.getSession();
+	UtilBO utilBo = new UtilBO();
    
    Usuario uConSesion = null;
    int idUsuario = -1;
@@ -73,177 +76,142 @@
 <!-- HTML -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, user-scalable=1, initial-scale=1.0">
-<title>Bienvenido a ListTasks</title>
-<link href='http://fonts.googleapis.com/css?family=Exo+2'
-	rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="css/vendor/jquery-ui/all.css">
-<link rel="stylesheet" href="css/vendor/jquery-ui/theme.css">
-<link rel="stylesheet"
-	href="css/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.css">
-<link rel="stylesheet" href="css/vendor/normalize/normalize.css">
-<link rel="stylesheet" href="css/estilos.css">
-</head>
-<body class="u-body">
-	<header class="cabecera">
-		<figure class="cabecera-logo">
-			<img class="cabecera-logo-imagen" src="css/imagenes/logos/logo-1.png"
-				alt="logo-1">
-			<figcaption class="cabecera-logo-figcaption">
-				<h4 class="cabecera-logo-figcaption-titulo4 u-titulo-4">Crea tu
-					propia lista de tareas</h4>
-			</figcaption>
-		</figure>
-		<figure class="cabecera-menu">
-			<img class="cabecera-menu-imagen" src="css/imagenes/iconos/menu.png"
-				alt="menu">
-		</figure>
-		<nav class="cabecera-navegacion">
-			<ul class="cabecera-navegacion-lista">
-				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace"
-					href="ServicioPerfil">amcoca2789</a></li>
-				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace"
-					href="ServiceLogout">Cerrar Sesion</a></li>
-				<li class="cabecera-navegacion-lista-item"><a
-					class="cabecera-navegacion-lista-item-enlace u-enlace"
-					href="ServiceSoporteTecnico">Soporte Tecnico</a></li>
-			</ul>
-		</nav>
-	</header>
-	<section class="calendario">
-		<div class="calendario-dia" id="dia1">
-			<div class="calendario-dia-nombre">
-				<span class="calendario-dia-nombre-span u-span">Lunes</span>
-				<ul class="calendario-dia-nombre-lista">
-					<li class="calendario-dia-nombre-lista-item"><a
-						class="calendario-dia-nombre-lista-item-enlace u-enlace u-boton-newtarea"
-						id="btn_new_tarea_dia1" href="#"></a></li>
-				</ul>
-			</div>
-			<form class="calendario-dia-formulario" id="form-newtarea-dia1"
-				action="ServiceNewTarea" method="post">
-				<h3 class="calendario-dia-formulario-titulo3 u-titulo-3">Nueva
-					Tarea</h3>
-				<label class="calendario-dia-formulario-label u-label"
-					for="form-newtarea">Descripcion:</label> <input
-					class="calendario-dia-formulario-input u-input"
-					name="caja_descripcion_creacion_dia1_tarea1"
-					id="caja_descripcion_creacion_dia1_tarea1" type="text" /> <label
-					class="calendario-dia-formulario-label u-label" for="form-newtarea">Fecha
-					Realizacion:</label> <input
-					class="calendario-dia-formulario-input u-input u-fecha"
-					name="caja_fecharealizacion_creacion_dia1_tarea1"
-					id="caja_fecharealizacion_creacion_dia1_tarea1" type="text" />
-
-				<ul class="calendario-dia-formulario-lista">
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-guardar-dia1-tarea1" type="submit">Guardar</button>
-					</li>
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-limpiar-dia1-tarea1" type="reset">Limpiar</button>
-					</li>
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-cancelar-dia1-tarea1" type="button">Cancelar</button>
-					</li>
-				</ul>
-			</form>
-
-			<%
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=1, initial-scale=1.0">
+        <title>Bienvenido a ListTasks</title>
+        <link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/vendor/jquery-ui/all.css">
+        <link rel="stylesheet" href="css/vendor/jquery-ui/theme.css">
+        <link rel="stylesheet" href="css/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.css">
+        <link rel="stylesheet" href="css/vendor/normalize/normalize.css">
+        <link rel="stylesheet" href="css/estilos.css">
+    </head>
+    <body class="u-body">
+        <header class="cabecera">
+            <figure class="cabecera-logo">
+                <img class="cabecera-logo-imagen" src="css/imagenes/logos/logo-1.png" alt="logo-1">
+                <figcaption class="cabecera-logo-figcaption">
+                    <h4 class="cabecera-logo-figcaption-titulo4 u-titulo-4">Crea tu propia lista de tareas</h4>
+                </figcaption>
+            </figure>
+            <figure class="cabecera-menu">
+                <img class="cabecera-menu-imagen" src="css/imagenes/iconos/menu.png" alt="menu" >
+            </figure>
+            <nav class="cabecera-navegacion">
+                <ul class="cabecera-navegacion-lista">
+                    <li class="cabecera-navegacion-lista-item">
+                        <a class="cabecera-navegacion-lista-item-enlace u-enlace" href="ServicioPerfil">amcoca2789</a>
+                    </li>
+                    <li class="cabecera-navegacion-lista-item">
+                        <a class="cabecera-navegacion-lista-item-enlace u-enlace" href="ServiceLogout">Cerrar Sesion</a>
+                    </li>
+                    <li class="cabecera-navegacion-lista-item">
+                        <a class="cabecera-navegacion-lista-item-enlace u-enlace" href="ServiceSoporteTecnico">Soporte Tecnico</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <section class="newtarea">
+            <a class="newtarea-enlace u-enlace u-boton-newtarea" id="btn_new_tarea" href="#"></a>
+            <form class="newtarea-formulario" id="form-newtarea" action="ServiceNewTarea" method="post">
+                <h3 class="newtarea-formulario-titulo3 u-titulo-3">
+                Nueva Tarea</h3>
+                <label class="newtarea-formulario-label u-label" for="form-newtarea">Descripcion:</label>
+                <input class="newtarea-formulario-input u-input" name="caja_descripcion_creacion" id="caja_descripcion_creacion" type="text" />
+                <label class="newtarea-formulario-label u-label" for="form-newtarea">Fecha Realizacion:</label>
+                <input class="newtarea-formulario-input u-input u-fecha" name="caja_fecharealizacion_creacion" id="caja_fecharealizacion_creacion" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
+                <ul class="newtarea-formulario-lista">
+                    <li class="newtarea-formulario-lista-item">
+                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-guardar-newtarea" type="submit">Guardar</button>
+                    </li>
+                    <li class="newtarea-formulario-lista-item">
+                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-limpiar-newtarea" type="reset">Limpiar</button>
+                    </li>
+                    <li class="newtarea-formulario-lista-item">
+                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-cancelar-newtarea" type="button">Cancelar</button>
+                    </li>
+                </ul>
+            </form>
+        </section>
+        <!-- ************************* [INICIO] Calendario *********************** -->
+        <section class="calendario">
+            <div class="calendario-dia" id="dia1">
+                <div class="calendario-dia-detalle">
+                    <span class="calendario-dia-detalle-nombre u-span">Lunes</span>
+                    <span class="calendario-dia-detalle-fecha u-span">05 septiembre 2014</span>
+                </div>
+                <%
 				if(listaTareas!=null){
-												for(Tarea tarea: listaTareas){
-			%>
-			<!-- ************************* [INICIO] Plantilla Tarea *********************** -->
-			<%
+					for(Tarea tarea: listaTareas){
+				%>
+                <!-- ************************* [INICIO] Plantilla Tarea *********************** -->
+                <%
+                int idDiaXTareaY=tarea.getIdTarea();
 				String descripcionTarea = tarea.getDescripcionTarea();
-													String idBotonera = "dia"+nroDia+"-"+"tarea"+nroTarea;
-													String idBotonEdicion = "btn-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-													String idFormEdicion = "form-edicion-dia"+nroDia+"-"+"tarea"+nroTarea;
-													String nameIdCajaDescripcionEdicion ="caja_descripcion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
-													String nameIdCajaFechaRealizEdicion ="caja_fecharealizacion_edicion_dia"+nroDia+"-"+"tarea"+nroTarea;
-			%>
-			<div class="calendario-dia-botonera" id="<%=idBotonera%>">
-				<ul class="calendario-dia-botonera-lista">
-					<li class="calendario-dia-botonera-lista-item"><a
-						href="ServicioConclusionTarea"
-						class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-concluida"
-						id="btn-concluida-dia1-tarea1"></a></li>
-					<li class="calendario-dia-botonera-lista-item"><a
-						href="ServicioArchivarTarea"
-						class="calendario-dia-botonera-lista-item-enlace u-enlace u-boton-archivada"
-						id="btn-archivada-dia1-tarea1"></a></li>
-				</ul>
-			</div>
-			<div class="calendario-dia-tarea">
-				<span class="calendario-dia-tarea-descripcion u-span"> <%=descripcionTarea%>
-					<a
-					class="calendario-dia-tarea-descripcion-enlace u-boton-ediciontarea"
-					id="<%=idBotonEdicion%>" href="#"></a>
-				</span>
-			</div>
-			<form class="calendario-dia-formulario" id="<%=idFormEdicion%>"
-				action="ServicioEdicionTarea" method="post">
-				<h3 class="calendario-dia-formulario-titulo3 u-titulo-3">Edicion
-					Tarea</h3>
-				<label class="calendario-dia-formulario-label u-label"
-					for="form-edicion-dia1-tarea1">Descripcion:</label> <input
-					class="calendario-dia-formulario-input u-input"
-					name="<%=nameIdCajaDescripcionEdicion%>"
-					id="<%=nameIdCajaDescripcionEdicion%>" type="text" /> <label
-					class="calendario-dia-formulario-label u-label"
-					for="form-edicion-dia1-tarea1">Fecha Realizacion:</label> <input
-					class="calendario-dia-formulario-input u-input u-fecha"
-					name="<%=nameIdCajaFechaRealizEdicion%>"
-					id="<%=nameIdCajaFechaRealizEdicion%>" type="text" />
-				<ul class="calendario-dia-formulario-lista">
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-guardar-dia1-tarea1" type="submit">Guardar</button>
-					</li>
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-limpiar-dia1-tarea1" type="reset">Limpiar</button>
-					</li>
-					<li class="calendario-dia-formulario-lista-item">
-						<button class="calendario-dia-formulario-lista-item-boton u-boton"
-							id="btn-cancelar-dia1-tarea1" type="button">Cancelar</button>
-					</li>
-				</ul>
-			</form>
-			<!-- ************************* [FIN] Plantilla Tarea *********************** -->
-			<%
-				nroTarea++;
-											}
-										}else{
-												System.out.println("No existe tareas");
-										}
-			%>
-		</div>
-	</section>
-	<footer class="contacto">
-		<h2 class="contacto-titulo2 u-titulo-2">Contacto</h2>
-		<h3 class="contacto-titulo3 u-titulo-3">AMROSOFT 2014 ®</h3>
-	</footer>
-	<!-- JavaScript -->
-	<script src="js/vendor/jquery/jquery.js">
-		;
-	</script>
-	<script src="js/vendor/jquery-ui/jquery-ui.js">
-		;
-	</script>
-	<script
-		src="js/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.js">
-		;
-	</script>
-	<script src="js/general.min.js">
-		;
-	</script>
-</body>
+                Calendar fechaRealizacionTarea=tarea.getFechaRealizacionTarea();
+                String fechaRealizacionTareaStr = utilBo.convertirCalendarToString(fechaRealizacionTarea);
+                
+                String diaX = "dia"+nroDia;
+                String tareaY = "tarea"+nroTarea;
+				String diaXtareaY = diaX + "-" + tareaY;
+				%>
+                <div class="calendario-dia-tarea" id="<%=diaXtareaY%>">
+                    <ul class="calendario-dia-tarea-lista">
+                        <li class="calendario-dia-tarea-lista-item">
+                            <a class="calendario-dia-tarea-lista-item-enlace u-enlace u-boton-concluida" id="btn-concluida-dia1-tarea1" href="ServicioConclusionTarea"></a>
+                        </li>
+                        <li class="calendario-dia-tarea-lista-item">
+                            <a class="calendario-dia-tarea-lista-item-enlace u-enlace u-boton-archivada" id="btn-archivada-dia1-tarea1" href="ServicioArchivarTarea"></a>
+                        </li>
+                    </ul>
+                    <span class="calendario-dia-tarea-descripcion u-span">
+                    <%=descripcionTarea %>
+                    <a class="calendario-dia-tarea-descripcion-enlace u-enlace u-boton-ediciontarea" id="btn-edicion-<%=diaXtareaY%>" href="#"></a>
+                    </span>
+                    <form class="calendario-dia-tarea-formulario" id="form-edittarea-<%=diaXtareaY%>" action="ServicioEdicionTarea" method="post">
+                        <h3 class="calendario-dia-tarea-formulario-titulo3 u-titulo-3">Edicion Tarea</h3>
+                        <input name="caja_idtarea_edicion-dia1-tarea1" id="caja_idtarea_edicion-dia1-tarea1" value="<%=idDiaXTareaY %>" type="hidden" />
+                        <label class="calendario-dia-tarea-formulario-label u-label" for="form-edittarea-dia1-tarea1">Descripcion:</label>
+                        <input class="calendario-dia-tarea-formulario-input u-input" name="caja_descripcion_edicion-<%=diaXtareaY%>" id="caja_descripcion_edicion-<%=diaXtareaY%>" value="<%=descripcionTarea %>" type="text" />
+                        <label class="calendario-dia-tarea-formulario-label u-label" for="form-edittarea-dia1-tarea1">Fecha Realizacion:</label>
+                        <input class="calendario-dia-tarea-formulario-input u-input u-fecha" name="caja_fecharealizacion_edicion-<%=diaXtareaY%>" id="caja_fecharealizacion_edicion-<%=diaXtareaY%>" value="<%=fechaRealizacionTareaStr %>" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
+                        <ul class="calendario-dia-tarea-formulario-lista">
+                            <li class="calendario-dia-tarea-formulario-lista-item">
+                                <button class="calendario-dia-tarea-formulario-lista-item-boton u-boton" id="btn-guardar-edittarea" type="submit">Guardar</button>
+                            </li>
+                            <li class="calendario-dia-tarea-formulario-lista-item">
+                                <button class="calendario-dia-tarea-formulario-lista-item-boton u-boton" id="btn-limpiar-edittarea" type="reset">Limpiar</button>
+                            </li>
+                            <li class="calendario-dia-tarea-formulario-lista-item">
+                                <button class="calendario-dia-tarea-formulario-lista-item-boton u-boton" id="btn-cancelar-edittarea" type="button">Cancelar</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+                <!-- ************************* [FIN] Plantilla Tarea *********************** -->
+                <%
+					nroTarea++;
+					}
+				}else{
+					System.out.println("No existe tareas");
+				}
+				%>
+            </div>
+        </section>
+        <!-- ************************* [FIN] Calendario *********************** -->
+        <footer class="contacto">
+            <h2 class="contacto-titulo2 u-titulo-2">
+                Contacto
+            </h2>
+            <h3 class="contacto-titulo3 u-titulo-3">
+                AMROSOFT 2014 ®
+            </h3>
+        </footer>
+        <!-- JavaScript -->
+        <script src="js/vendor/jquery/jquery.js">;</script>
+        <script src="js/vendor/jquery-ui/jquery-ui.js">;</script>
+        <script src="js/vendor/jquery-ui-datetimepicker/jquery.datetimepicker.js">;</script>
+        <script src="js/general.min.js">;</script>
+    </body>
 </html>

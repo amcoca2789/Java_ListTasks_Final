@@ -11,6 +11,9 @@
 }
 .u-boton {
   background-color: transparent;
+  border: 1px solid #fff;
+  -webkit-border-radius: 0.5em;
+  border-radius: 0.5em;
   color: #fff;
   font-family: 'Exo 2';
   font-size: 2em;
@@ -607,100 +610,97 @@
   }
 }
 /*Gestion Tarea*/
-.calendario {
-  display: block;
-  margin: 10px;
-  padding: 5px;
-}
 .calendario-dia {
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
   display: inline-block;
-  margin: 0;
   padding: 5px;
   vertical-align: top;
   width: 13%;
 }
 .calendario-dia-detalle {
-  display: block;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
-.calendario-dia-detalle-nombre {
   background-color: #006ddb;
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
-  display: inline-block;
-  margin: 0;
-  padding: 5px;
-  vertical-align: middle;
+  display: block;
+  text-align: center;
 }
 .calendario-dia-detalle-fecha {
-  background-color: #008484;
+  display: inline-block;
+  padding: 5px;
+  vertical-align: middle;
+  word-break: break-all;
+}
+.calendario-dia-detalle-nombredia {
+  display: inline-block;
+  font-weight: bold;
+  padding: 5px;
+  vertical-align: middle;
+  word-break: break-all;
+}
+.calendario-dia-resultado {
+  background-color: #fff;
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
-  display: inline-block;
-  margin: 0;
-  padding: 5px;
-  vertical-align: middle;
+  display: block;
+  margin: 5px;
+}
+.calendario-dia-resultado-mensaje {
+  color: #f00;
+  display: block;
+  text-align: center;
+  word-break: break-all;
 }
 .calendario-dia-tarea {
   background-color: #ff8000;
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
-  margin: 5px;
-  padding: 5px;
-}
-.calendario-dia-tarea-lista {
   display: block;
-  list-style: none;
-  list-style-position: inside;
-  margin: 10px;
-  padding: 0;
+  margin: 5px;
+  padding: 10px;
+}
+.calendario-dia-tarea-contenedor {
+  display: block;
   text-align: center;
 }
-.calendario-dia-tarea-lista-item {
+.calendario-dia-tarea-contenedor-archivar {
   display: inline-block;
-  margin: 4px;
-  padding: 0;
   vertical-align: middle;
+  text-align: center;
 }
-.calendario-dia-tarea-lista-item-enlace {
+.calendario-dia-tarea-contenedor-archivar-boton {
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
-  display: block;
-  margin: 0;
-  padding: 6px;
-  text-align: center;
-  text-decoration: none;
 }
-.calendario-dia-tarea-lista-item-enlace:active {
-  color: #fff;
-}
-.calendario-dia-tarea-lista-item-enlace:hover {
+.calendario-dia-tarea-contenedor-archivar-boton:hover {
   background-color: #800040;
 }
-.calendario-dia-tarea-lista-item-enlace:link {
-  color: #fff;
+.calendario-dia-tarea-contenedor-conclusion {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
 }
-.calendario-dia-tarea-lista-item-enlace:visited {
-  color: #fff;
+.calendario-dia-tarea-contenedor-conclusion-boton {
+  border: 1px solid #fff;
+  -webkit-border-radius: 0.5em;
+  border-radius: 0.5em;
+}
+.calendario-dia-tarea-contenedor-conclusion-boton:hover {
+  background-color: #800040;
 }
 .calendario-dia-tarea-descripcion {
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
   color: #000;
   display: block;
-  margin: 0;
-  padding: 10px;
+  margin: 5px;
   text-align: center;
   word-break: break-all;
 }
@@ -710,10 +710,10 @@
   border-radius: 0.5em;
   display: inline-block;
   font-size: 0.8em;
-  margin: 0;
   padding: 6px;
-  text-align: center;
+  margin: 0;
   text-decoration: none;
+  text-align: center;
   vertical-align: middle;
 }
 .calendario-dia-tarea-descripcion-enlace:active {
@@ -728,42 +728,48 @@
 .calendario-dia-tarea-descripcion-enlace:visited {
   color: #fff;
 }
-.calendario-dia-tarea-formulario {
-  background-color: #006ddb;
+.calendario-dia-tarea-edicion {
+  background-color: #008484;
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
   display: none;
-  margin: 0;
-  padding: 5px;
+  margin: 5px;
+  padding: 10px;
 }
-.calendario-dia-tarea-formulario-lista {
-  display: block;
+.calendario-dia-tarea-edicion-label {
+  word-break: break-all;
+}
+.calendario-dia-tarea-edicion-lista {
   list-style: none;
   list-style-position: inside;
   margin: 10px;
-  padding: 3px;
+  padding: 0;
   text-align: center;
 }
-.calendario-dia-tarea-formulario-lista-item {
+.calendario-dia-tarea-edicion-lista-item {
   display: inline-block;
-  margin: 4px;
-  padding: 0;
   vertical-align: middle;
 }
-.calendario-dia-tarea-formulario-lista-item-boton {
-  border: 1px solid #fff;
-  -webkit-border-radius: 0.5em;
-  border-radius: 0.5em;
+.calendario-dia-tarea-edicion-lista-item-boton {
   display: block;
-  margin: 0;
   padding: 6px;
 }
-.calendario-dia-tarea-formulario-lista-item-boton:hover {
-  background-color: #800040;
+.calendario-dia-tarea-edicion-lista-item-boton:active {
+  color: #fff;
 }
-.calendario-dia-tarea-formulario-titulo3 {
+.calendario-dia-tarea-edicion-lista-item-boton:hover {
+  background-color: #006ddb;
+}
+.calendario-dia-tarea-edicion-lista-item-boton:link {
+  color: #fff;
+}
+.calendario-dia-tarea-edicion-lista-item-boton:visited {
+  color: #fff;
+}
+.calendario-dia-tarea-edicion-titulo3 {
   text-align: center;
+  word-break: break-all;
 }
 .newtarea {
   display: block;

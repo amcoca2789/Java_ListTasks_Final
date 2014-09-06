@@ -1,7 +1,7 @@
 var name_btn = "btn";
 var name_btn_edicion = "btn-edicion";
 var name_btn_new_tarea = "btn_new_tarea_";
-var name_form_edicion = "form-edittarea";
+var name_form_edicion = "formulario-editada";
 var name_form_newtarea = "form-newtarea";
 
 $(document).ready(function() {
@@ -13,6 +13,8 @@ $(document).ready(function() {
     	formatTime:'H:i:s',
 		formatDate:'Y/m/d'
     });
+    $('u-boton-concluida').on('click', enviarDatosServlet);
+
 });
 
 function mostrarFormularioNewTarea (evnt) {
@@ -32,4 +34,18 @@ function mostrarFormularioEdicionTarea (evnt) {
 
 	console.log("idFormulario:"+idFormulario);
 	$("#"+idFormulario).slideToggle(100);
+}
+
+function enviarDatosServlet () {
+	var idTarea = $("#caja_idtarea_edicion-dia1-tarea1").val();
+
+
+	$.post('ServicioConclusionTarea', 
+		{
+			param1: 'value1',
+		}, 
+		function(data, textStatus) {
+			alert("Data: " + data + "\nStatus: " + textStatus);
+		}
+	);
 }

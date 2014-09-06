@@ -159,14 +159,20 @@
                     <p class="calendario-dia-detalle-fecha u-parrafo">[<%=fechaDia %>]</p>
                 </div>
                 <%
-				if(listaTareas==null){
-				%>
-				<div class="calendario-dia-resultado">
-                    <span class="calendario-dia-resultado-mensaje u-span">NO hay tareas para este dia</span>
-                </div>				
-				<%	
+				if(listaTareas==null || listaTareas.isEmpty()){
+					System.out.println("Lista Tareas vacia o nula");
 				}else{
 					List<Tarea> listaTareasFiltradas = tareaDao.filtrarTareasPorFecha(listaTareas, fechaFiltro);
+					
+					if(listaTareasFiltradas==null || listaTareasFiltradas.isEmpty()){
+				%>
+					<div class="calendario-dia-resultado">
+	                    <span class="calendario-dia-resultado-mensaje u-span">NO hay tareas para este dia</span>
+	                </div>
+				<%	
+					}else{
+				%>
+				<%
 					for(Tarea tarea: listaTareasFiltradas){
 				%>
                 <!-- ************************* [INICIO] Plantilla Tarea *********************** -->
@@ -182,17 +188,17 @@
 				%>
                 <div class="calendario-dia-tarea" id="<%=diaXtareaY%>">
                     <div class="calendario-dia-tarea-contenedor">
-                        <form class="calendario-dia-tarea-contenedor-conclusion" id="formulario-concluida-<%=diaXtareaY%>" action="ServicioConclusionTarea" method="post">
+ 						<form class="calendario-dia-tarea-contenedor-conclusion" id="formulario-concluida-<%=diaXtareaY%>" action="ServicioConclusionTarea" method="post">
                             <input name="caja-nro-dia" id="caja-nro-dia" value="<%=nroDia %>" type="hidden" />
                             <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
-                            <input name="caja-nro-idtarea" id="caja-nro-idtarea" value="<%=idDiaXTareaY %>" type="hidden" />
-                            <button class="calendario-dia-tarea-contenedor-conclusion-boton u-boton u-boton-concluida" id="" type="submit"></button>
+                            <input name="caja-nro-idtarea-conclusion-<%=diaXtareaY%>" id="caja-nro-idtarea-conclusion-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
+                            <button class="calendario-dia-tarea-contenedor-conclusion-boton u-boton u-boton-concluida" id="btn-concluida-<%=diaXtareaY%>" type="submit"></button>
                         </form>
                         <form class="calendario-dia-tarea-contenedor-archivar" id="formulario-archivada-<%=diaXtareaY%>" action="ServicioArchivarTarea" method="post">
                             <input name="caja-nro-dia" id="caja-nro-dia" value="<%=nroDia %>" type="hidden" />
                             <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
-                            <input name="caja-nro-idtarea" id="caja-nro-idtarea" value="<%=idDiaXTareaY %>" type="hidden" />
-                            <button class="calendario-dia-tarea-contenedor-archivar-boton u-boton u-boton-archivada" id="" type="submit"></button>
+                            <input name="caja-nro-idtarea-archivar-<%=diaXtareaY%>" id="caja-nro-idtarea-archivar-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
+                            <button class="calendario-dia-tarea-contenedor-archivar-boton u-boton u-boton-archivada" id="btn-archivada-<%=diaXtareaY%>" type="submit"></button>
                         </form>
                     </div>
                     <span class="calendario-dia-tarea-descripcion u-span">
@@ -203,7 +209,7 @@
                         <h3 class="calendario-dia-tarea-edicion-titulo3 u-titulo-3">Edicion Tarea</h3>
                         <input name="caja-nro-dia" id="caja-nro-dia" value="<%=nroDia %>" type="hidden" />
                         <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
-                        <input name="caja-nro-idtarea-edicion-<%=diaXtareaY%>" id="caja-nro-idtarea-edicion-<%=diaXtareaY%>" value="" type="hidden" />
+                        <input name="caja-nro-idtarea-edicion-<%=diaXtareaY%>" id="caja-nro-idtarea-edicion-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
                         <label class="calendario-dia-tarea-edicion-label u-label" for="formulario-editada-<%=diaXtareaY%>">Descripcion:</label>
                         <input class="calendario-dia-tarea-edicion-input u-input" name="caja_descripcion_edicion-<%=diaXtareaY%>" id="caja_descripcion_edicion-<%=diaXtareaY%>" value="" type="text" />
                         <label class="calendario-dia-tarea-edicion-label u-label" for="formulario-editada-<%=diaXtareaY%>">Fecha Realizacion:</label>
@@ -223,8 +229,9 @@
                 </div>
                 <!-- ************************* [FIN] Plantilla Tarea *********************** -->
                 <%
-						}//fin for tarea
-					}//fin else tarea
+							}//fin for tareafiltradas
+						}//fin else tareafiltradas
+					}//fin else listatarea
                 %>
             </div>
             <!-- ************************* [FIN] Plantilla DIA *********************** -->

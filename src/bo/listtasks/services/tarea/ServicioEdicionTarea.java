@@ -74,13 +74,6 @@ public class ServicioEdicionTarea extends HttpServlet {
 				String idCajaEdicionFechRealTarea = "caja_fecharealizacion_edicion-"
 						+ diaXtareaY;
 
-				System.out.println("idCajaEdicionIdTarea:"
-						+ idCajaEdicionIdTarea);
-				System.out.println("idCajaEdicionDescripcionTarea:"
-						+ idCajaEdicionDescripcionTarea);
-				System.out.println("idCajaEdicionFechRealTarea:"
-						+ idCajaEdicionFechRealTarea);
-
 				idTareaStr = request.getParameter(idCajaEdicionIdTarea);
 				descripcionTarea = request
 						.getParameter(idCajaEdicionDescripcionTarea);

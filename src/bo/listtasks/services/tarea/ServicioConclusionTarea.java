@@ -2,11 +2,9 @@ package bo.listtasks.services.tarea;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +14,6 @@ import bo.listtasks.constantes.ConstanteGral;
 import bo.listtasks.constantes.ConstanteUsuario;
 import bo.listtasks.constantes.ConstantesRutasServlet;
 import bo.listtasks.dao.tarea.TareaDao;
-import bo.listtasks.dto.tarea.Tarea;
-import bo.listtasks.util.UtilBO;
 
 /**
  * Servlet implementation class ServicioConclusionTarea
@@ -55,12 +51,10 @@ public class ServicioConclusionTarea extends HttpServlet {
 			String idUsuario = String.valueOf(sess
 					.getAttribute(ConstanteUsuario.IDUSUARIO));
 
-			String nroDiaStr = request.getParameter("caja_nro_dia");
-			String nroTareaStr = request.getParameter("caja_nro_tarea");
+			String nroDiaStr = request.getParameter("caja-nro-dia");
+			String nroTareaStr = request.getParameter("caja-nro-tarea");
 
 			int idTarea = -1;
-			String descripcionTarea = null;
-			String fechaRealizacionStr = null;
 			String idTareaStr = "-1";
 			if (nroDiaStr != null && nroTareaStr != null) {
 				int nroDia = Integer.parseInt(nroDiaStr);
@@ -68,48 +62,30 @@ public class ServicioConclusionTarea extends HttpServlet {
 				String diaX = "dia" + nroDia;
 				String tareaY = "tarea" + nroTarea;
 				String diaXtareaY = diaX + "-" + tareaY;
-				String idCajaEdicionIdTarea = "caja-nro-idtarea-edicion-"
+				String idCajaEdicionIdTarea = "caja-nro-idtarea-conclusion-"
 						+ diaXtareaY;
-				String idCajaEdicionDescripcionTarea = "caja_descripcion_edicion-"
-						+ diaXtareaY;
-				String idCajaEdicionFechRealTarea = "caja_fecharealizacion_edicion-"
-						+ diaXtareaY;
-
-				System.out.println("idCajaEdicionIdTarea:"
-						+ idCajaEdicionIdTarea);
-				System.out.println("idCajaEdicionDescripcionTarea:"
-						+ idCajaEdicionDescripcionTarea);
-				System.out.println("idCajaEdicionFechRealTarea:"
-						+ idCajaEdicionFechRealTarea);
 
 				idTareaStr = request.getParameter(idCajaEdicionIdTarea);
-				descripcionTarea = request
-						.getParameter(idCajaEdicionDescripcionTarea);
-				fechaRealizacionStr = request
-						.getParameter(idCajaEdicionFechRealTarea);
 			}
 
-			UtilBO utilBo = new UtilBO();
-
 			try {
-				Calendar fechaRealizacionTarea = utilBo
-						.convertStringToCalendar(fechaRealizacionStr);
 
-				if (idTareaStr != null) {
+				System.out.println("idTareaStr:" + idTareaStr);
+				if (idTareaStr != null && !idTareaStr.isEmpty()) {
 					idTarea = Integer.parseInt(idTareaStr);
+				} else {
+					System.out
+							.println("IDTAREA es nulo o vacio->" + idTareaStr);
 				}
 
-				Tarea t = new Tarea();
-				t.setIdTarea(idTarea);
-				t.setDescripcionTarea(descripcionTarea);
-				t.setFechaRealizacionTarea(fechaRealizacionTarea);
-				t.setIdUsuario(Integer.parseInt(idUsuario));
-				t.setEstadoTarea(ConstanteGral.ESTADO_EN_DESARROLLO);
-
-				System.out.println("TAREA:" + t);
-
-				TareaDao tDao = new TareaDao();
-				boolean isEditado = tDao.edicionTarea(t);
+				boolean isEditado = false;
+				if (idTarea != -1) {
+					TareaDao tDao = new TareaDao();
+					isEditado = tDao.cambioEstado(idUsuario, idTarea,
+							ConstanteGral.ESTADO_CONCLUIDO);
+				} else {
+					System.out.println("IDTAREA invalido->" + idTarea);
+				}
 
 				if (!isEditado) {
 					System.out.println("No se edito la tarea");

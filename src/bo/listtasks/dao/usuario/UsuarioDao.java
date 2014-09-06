@@ -67,8 +67,6 @@ public class UsuarioDao {
 					String queryInsert = UtilBO.cambioValores(queryDefault,
 							datos);
 
-					System.out.println("queryInsert:" + queryInsert);
-
 					PreparedStatement ps = null;
 
 					try {

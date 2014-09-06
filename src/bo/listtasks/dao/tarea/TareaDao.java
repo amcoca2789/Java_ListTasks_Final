@@ -80,7 +80,6 @@ public class TareaDao {
 					String queryInsert = UtilBO.cambioValores(queryDefault,
 							datos);
 
-					System.out.println("queryInsert:" + queryInsert);
 
 					PreparedStatement ps = null;
 
@@ -163,8 +162,6 @@ public class TareaDao {
 						nombreEsquemaDB, nombreTabla, where };
 				String querySelect = UtilBO.cambioValores(queryDefault,
 						datosSQL);
-
-				System.out.println("querySelect:" + querySelect);
 
 				PreparedStatement ps = null;
 				ResultSet rs = null;
@@ -348,5 +345,97 @@ public class TareaDao {
 		}
 
 		return false;
+	}
+
+	public boolean cambioEstado(String idUsuario, int idTarea, String estado)
+			throws SQLException {
+
+		ConexionBD cnxBD = configDB.obtenerConexionConectada();
+		Connection conexion = cnxBD.getConexion();
+
+		if (conexion != null) {
+
+			if (idTarea != -1) {
+				UtilDao utilDao = new UtilDao();
+				UtilBO utilBo = new UtilBO();
+
+				String nombreEsquemaDB = cnxBD.getNameBD();
+				String nombreTabla = ConstanteNombreTabla.TAREA;
+
+				String queryDefault = ConstanteQueriesDB.UPDATE_CON_RESTRICCION;
+
+				// "********SET************"
+				System.out.println("********SET************");
+				String[] nombreColumnasSet = { ConstanteTarea.ESTADOTAREA };
+				String[] datosSet = { ConstanteGral.ESTADO_CONCLUIDO };
+				String[] tipoDatosSet = { ConstanteGral.TIPO_VARCHAR2 };
+				String[] datosSetConvertidos = utilBo.convertirDatosADatosSQL(
+						tipoDatosSet, datosSet);
+				System.out.println("datosSetConvertidos:"
+						+ Arrays.toString(datosSetConvertidos));
+				// "********WHERE************"
+				System.out.println("********WHERE************");
+				String[] nombresColumnasWhere = { ConstanteTarea.IDUSUARIO,
+						ConstanteTarea.IDTAREA };
+				String[] datosCondicionWhere = { idUsuario,
+						String.valueOf(idTarea) };
+				String[] tipoDatosWhere = { ConstanteGral.TIPO_NUMBER,
+						ConstanteGral.TIPO_NUMBER };
+				String[] datosCondicionWhereConvertidos = utilBo
+						.convertirDatosADatosSQL(tipoDatosWhere,
+								datosCondicionWhere);
+				System.out.println("datosCondicionWhereConvertidos:"
+						+ Arrays.toString(datosCondicionWhereConvertidos));
+
+				// "********SET************"
+				String setUpdate = utilDao.construirSetUpdate(
+						nombreColumnasSet, datosSetConvertidos);
+				System.out.println("setUpdate:[" + setUpdate + "]");
+				// "********WHERE************"
+				String whereUpdate = utilDao.construirWhere(
+						nombresColumnasWhere, datosCondicionWhereConvertidos,
+						ConstanteGral.OPERADOR_AND);
+				System.out.println("whereUpdate:[" + whereUpdate + "]");
+
+				// *** QUERY UPDATE
+				String[] datos = { nombreEsquemaDB, nombreTabla, setUpdate,
+						whereUpdate };
+				String queryUpdate = UtilBO.cambioValores(queryDefault, datos);
+
+				System.out.println("queryUpdate:" + queryUpdate);
+
+				PreparedStatement ps = null;
+
+				try {
+					ps = conexion.prepareStatement(queryUpdate);
+					int resultado = ps.executeUpdate();
+
+					if (resultado == 1) {
+						System.out
+								.println("Se modifico el registro correctamente...");
+						return true;
+					}
+					return false;
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					if (ps != null) {
+						ps.close();
+					}
+					if (conexion != null) {
+						System.out.println("CONEXION CERRADA");
+						conexion.close();
+					}
+				}
+			} else {
+				System.out.println("El IDTAREA no es valido:" + idTarea);
+			}
+		} else {
+			System.out.println("No se pudo obtener conexion");
+		}
+
+		return false;
+
 	}
 }

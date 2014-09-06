@@ -115,26 +115,26 @@ public class UtilDao extends ConfiguracionDB {
 		return namesColumnasTask;
 	}
 
-	public String construirWhere(String[] nombresColumnasCondicion,
-			String[] datosCondicion, String operadorLogicoSQL) {
+	public String construirWhere(String[] nombresColumnasWhere,
+			String[] datosCondicionWhere, String operadorLogicoSQL) {
 
 		StringBuffer where = new StringBuffer();
 
 		int nroColumnas = 0;
 		int nroDatos = 0;
 
-		if (nombresColumnasCondicion != null && datosCondicion != null) {
-			nroColumnas = nombresColumnasCondicion.length;
-			nroDatos = datosCondicion.length;
+		if (nombresColumnasWhere != null && datosCondicionWhere != null) {
+			nroColumnas = nombresColumnasWhere.length;
+			nroDatos = datosCondicionWhere.length;
 
 			if (nroColumnas == nroDatos) {
 				where.append(" WHERE ");
-				for (int i = 0; i < datosCondicion.length; i++) {
-					where.append(nombresColumnasCondicion[i] + "= "
-							+ datosCondicion[i]);
+				for (int i = 0; i < datosCondicionWhere.length; i++) {
+					where.append(nombresColumnasWhere[i] + "= "
+							+ datosCondicionWhere[i]);
 					where.append(ConstanteGral.ESPACIO_EN_BLANCO);
 
-					if (i != datosCondicion.length - 1) {
+					if (i != datosCondicionWhere.length - 1) {
 						where.append(operadorLogicoSQL);
 					}
 				}
@@ -318,24 +318,28 @@ public class UtilDao extends ConfiguracionDB {
 		return dato;
 	}
 
-	public String construirSetUpdate(String[] nombreColumnasActualizar,
-			String[] datosToActualizar) {
+	public String construirSetUpdate(String[] nombreColumnasSet,
+			String[] datosSet) {
 
-		StringBuffer datosSet = new StringBuffer();
+		System.out.println("nombreColumnasActualizar.length:"
+				+ nombreColumnasSet.length);
+		System.out.println("datosToActualizar.length:" + datosSet.length);
 
-		if (nombreColumnasActualizar != null && datosToActualizar != null) {
-			int nroColumnas = nombreColumnasActualizar.length;
-			int nroDatos = datosToActualizar.length;
+		StringBuffer datosSetCadena = new StringBuffer();
+
+		if (nombreColumnasSet != null && datosSetCadena != null) {
+			int nroColumnas = nombreColumnasSet.length;
+			int nroDatos = datosSet.length;
 
 			if (nroColumnas == nroDatos) {
-				for (int i = 0; i < nombreColumnasActualizar.length; i++) {
-					if (i == nombreColumnasActualizar.length - 1) {
-						datosSet.append(" , ");
+				for (int i = 0; i < nombreColumnasSet.length; i++) {
+					datosSetCadena.append(nombreColumnasSet[i]);
+					datosSetCadena.append("=");
+					datosSetCadena.append(datosSet[i]);
+					if (nombreColumnasSet.length > 1
+							&& i == nombreColumnasSet.length - 1) {
+						datosSetCadena.append(" , ");
 					}
-					datosSet.append(nombreColumnasActualizar[i]);
-					datosSet.append("=");
-					datosSet.append(datosToActualizar[i]);
-
 				}
 			} else {
 				System.out.println("nro de elementos desiguales");
@@ -345,6 +349,6 @@ public class UtilDao extends ConfiguracionDB {
 			System.out.println("Los parametros de entradas nulos");
 		}
 
-		return datosSet.toString();
+		return datosSetCadena.toString();
 	}
 }

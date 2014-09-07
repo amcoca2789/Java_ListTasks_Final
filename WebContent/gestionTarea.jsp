@@ -18,6 +18,16 @@
 	Calendar fechaActual = Calendar.getInstance(); 
 	List<Calendar> diasDeLaSemana = utilBo.obtenerDiasDeLaSemana(fechaActual);
    
+	String inicioPeriodoStr = ConstanteGral.SIN_DATOS;
+	String finPeriodoStr = ConstanteGral.SIN_DATOS;
+	if(diasDeLaSemana!=null && diasDeLaSemana.size()>1 ){
+		Calendar inicioFecha = diasDeLaSemana.get(0);
+		Calendar finFecha = diasDeLaSemana.get(diasDeLaSemana.size()-1);
+		
+		inicioPeriodoStr = utilBo.convertirCalendarToStringFecha(inicioFecha, ConstanteGral.FORMATO_FECHA_1);
+		finPeriodoStr = utilBo.convertirCalendarToStringFecha(finFecha, ConstanteGral.FORMATO_FECHA_1);
+	}
+	
    Usuario uConSesion = null;
    int idUsuario = -1;
    String usuarioStr = ConstanteGral.SIN_DATOS;
@@ -113,31 +123,35 @@
                 </ul>
             </nav>
         </header>
-        <section class="newtarea">
-            <a class="newtarea-enlace u-enlace u-boton-newtarea" id="btn_new_tarea" href="#"></a>
-            <form class="newtarea-formulario" id="form-newtarea" action="ServiceNewTarea" method="post">
-                <h3 class="newtarea-formulario-titulo3 u-titulo-3">
-                    Nueva Tarea
-                </h3>
-                <label class="newtarea-formulario-label u-label" for="form-newtarea">Descripcion:</label>
-                <input class="newtarea-formulario-input u-input" name="caja_descripcion_creacion" id="caja_descripcion_creacion" type="text" />
-                <label class="newtarea-formulario-label u-label" for="form-newtarea">Fecha Realizacion:</label>
-                <input class="newtarea-formulario-input u-input u-fecha" name="caja_fecharealizacion_creacion" id="caja_fecharealizacion_creacion" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
-                <ul class="newtarea-formulario-lista">
-                    <li class="newtarea-formulario-lista-item">
-                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-guardar-newtarea" type="submit">Guardar</button>
-                    </li>
-                    <li class="newtarea-formulario-lista-item">
-                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-limpiar-newtarea" type="reset">Limpiar</button>
-                    </li>
-                    <li class="newtarea-formulario-lista-item">
-                        <button class="newtarea-formulario-lista-item-boton u-boton" id="btn-cancelar-newtarea" type="button">Cancelar</button>
-                    </li>
-                </ul>
-            </form>
-        </section>
-        <!-- ************************* [INICIO] Calendario *********************** -->
+        <!-- ************************* [INICIO] calendarioactivas *********************** -->
         <section class="calendario">
+            <div class="calendario-encabezado">
+                <h3 class="calendario-encabezado-titulo3 u-titulo-3">Calendario de Tareas [EN DESARROLLO]</h3>
+                <h4 class="calendario-encabezado-titulo4 u-titulo-4">[01 septiembre 2014 - 07 septiembre 2014]</h4>
+            </div>
+            <div class="calendario-newtarea">
+                <a class="calendario-newtarea-enlace u-enlace u-boton-newtarea" id="btn_new_tarea" href="#"></a>
+                <form class="calendario-newtarea-formulario" id="form-newtarea" action="ServiceNewTarea" method="post">
+                    <h3 class="calendario-newtarea-formulario-titulo3 u-titulo-3">
+                        Nueva Tarea
+                    </h3>
+                    <label class="calendario-newtarea-formulario-label u-label" for="form-newtarea">Descripcion:</label>
+                    <input class="calendario-newtarea-formulario-input u-input" name="caja_descripcion_creacion" id="caja_descripcion_creacion" type="text" />
+                    <label class="calendario-newtarea-formulario-label u-label" for="form-newtarea">Fecha Realizacion:</label>
+                    <input class="calendario-newtarea-formulario-input u-input u-fecha" name="caja_fecharealizacion_creacion" id="caja_fecharealizacion_creacion" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
+                    <ul class="calendario-newtarea-formulario-lista">
+                        <li class="calendario-newtarea-formulario-lista-item">
+                            <button class="calendario-newtarea-formulario-lista-item-boton u-boton" id="btn-guardar-newtarea" type="submit">Guardar</button>
+                        </li>
+                        <li class="calendario-newtarea-formulario-lista-item">
+                            <button class="calendario-newtarea-formulario-lista-item-boton u-boton" id="btn-limpiar-newtarea" type="reset">Limpiar</button>
+                        </li>
+                        <li class="calendario-newtarea-formulario-lista-item">
+                            <button class="calendario-newtarea-formulario-lista-item-boton u-boton" id="btn-cancelar-newtarea" type="button">Cancelar</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
             <!-- ************************* [INICIO] Plantilla DIA *********************** -->
             <%
 				if(diasDeLaSemana!=null){
@@ -151,8 +165,7 @@
 							fechaDia = utilBo.convertirCalendarToStringFecha(fechaFiltro, ConstanteGral.FORMATO_FECHA_2);
 						}
 			%>
-			
-            <div class="calendario-dia" id="dia1">
+            <div class="calendario-dia" id="<%=nroDia%>">
                 <div class="calendario-dia-detalle">
                     <span class="calendario-dia-detalle-nombredia u-span"><%=nombreDia %></span>
                     <p class="calendario-dia-detalle-fecha u-parrafo">[<%=fechaDia %>]</p>
@@ -162,10 +175,10 @@
 					
 					if(listaTareasFiltradas==null || listaTareasFiltradas.isEmpty()){
 				%>
-					<div class="calendario-dia-resultado">
-	                    <span class="calendario-dia-resultado-mensaje u-span">NO hay tareas para este dia</span>
-	                </div>
-				<%	
+                <div class="calendario-dia-resultado">
+                    <span class="calendario-dia-resultado-mensaje u-span">NO hay tareas para este dia</span>
+                </div>
+                <%	
 					}else{
 				%>
 				<%
@@ -173,7 +186,7 @@
 					for(Tarea tarea: listaTareasFiltradas){
 				%>
                 <!-- ************************* [INICIO] Plantilla Tarea *********************** -->
-                <%
+                 <%
 					int idDiaXTareaY=tarea.getIdTarea();
 					String descripcionTarea = tarea.getDescripcionTarea();
 					Calendar fechaRealizacionTarea=tarea.getFechaRealizacionTarea();
@@ -185,17 +198,17 @@
 				%>
                 <div class="calendario-dia-tarea" id="<%=diaXtareaY%>">
                     <div class="calendario-dia-tarea-contenedor">
- 						<form class="calendario-dia-tarea-contenedor-conclusion" id="formulario-concluida-<%=diaXtareaY%>" action="ServicioConclusionTarea" method="post">
+                        <form class="calendario-dia-tarea-contenedor-conclusion" id="formulario-concluida-<%=diaXtareaY%>" action="ServicioConclusionTarea" method="post">
                             <input name="caja-nro-dia" id="caja-nro-dia" value="<%=nroDia %>" type="hidden" />
                             <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
                             <input name="caja-nro-idtarea-conclusion-<%=diaXtareaY%>" id="caja-nro-idtarea-conclusion-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
-                            <button class="calendario-dia-tarea-contenedor-conclusion-boton u-boton u-boton-concluida" id="btn-concluida-<%=diaXtareaY%>" type="submit"></button>
+                            <button class="calendario-dia-tarea-contenedor-conclusion-boton u-boton u-boton-concluida" id="btn-concluida" type="submit"></button>
                         </form>
                         <form class="calendario-dia-tarea-contenedor-archivar" id="formulario-archivada-<%=diaXtareaY%>" action="ServicioArchivarTarea" method="post">
                             <input name="caja-nro-dia" id="caja-nro-dia" value="<%=nroDia %>" type="hidden" />
                             <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
                             <input name="caja-nro-idtarea-archivar-<%=diaXtareaY%>" id="caja-nro-idtarea-archivar-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
-                            <button class="calendario-dia-tarea-contenedor-archivar-boton u-boton u-boton-archivada" id="btn-archivada-<%=diaXtareaY%>" type="submit"></button>
+                            <button class="calendario-dia-tarea-contenedor-archivar-boton u-boton u-boton-archivada" id="btn-archivada" type="submit"></button>
                         </form>
                     </div>
                     <span class="calendario-dia-tarea-descripcion u-span">
@@ -237,7 +250,7 @@
 			}//fin if dia
             %>
         </section>
-        <!-- ************************* [FIN] Calendario *********************** -->
+        <!-- ************************* [FIN] calendarioactivas *********************** -->
         <footer class="contacto">
             <h2 class="contacto-titulo2 u-titulo-2">
                 Contacto

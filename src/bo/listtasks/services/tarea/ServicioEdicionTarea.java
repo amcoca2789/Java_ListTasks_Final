@@ -86,24 +86,26 @@ public class ServicioEdicionTarea extends HttpServlet {
 					Calendar fechaRealizacionTarea = utilBo
 							.convertStringToCalendar(fechaRealizacionStr);
 
-					if (idTareaStr != null) {
+					if (idTareaStr != null && !idTareaStr.isEmpty()) {
 						idTarea = Integer.parseInt(idTareaStr);
-					}
 
-					Tarea t = new Tarea();
-					t.setIdTarea(idTarea);
-					t.setDescripcionTarea(descripcionTarea);
-					t.setFechaRealizacionTarea(fechaRealizacionTarea);
-					t.setIdUsuario(Integer.parseInt(idUsuario));
-					t.setEstadoTarea(ConstanteGral.ESTADO_EN_DESARROLLO);
+						Tarea t = new Tarea();
+						t.setIdTarea(idTarea);
+						t.setDescripcionTarea(descripcionTarea);
+						t.setFechaRealizacionTarea(fechaRealizacionTarea);
+						t.setIdUsuario(Integer.parseInt(idUsuario));
+						t.setEstadoTarea(ConstanteGral.ESTADO_EN_DESARROLLO);
 
-					System.out.println("TAREA:" + t);
+						System.out.println("TAREA:" + t);
 
-					TareaDao tDao = new TareaDao();
-					boolean isEditado = tDao.edicionTarea(t);
+						TareaDao tDao = new TareaDao();
+						boolean isEditado = tDao.edicionTarea(t);
 
-					if (!isEditado) {
-						System.out.println("No se edito la tarea");
+						if (!isEditado) {
+							System.out.println("No se edito la tarea");
+						}
+					}else{
+						System.out.println("IdTarea nulo o vacio");
 					}
 
 				} catch (SQLException e) {

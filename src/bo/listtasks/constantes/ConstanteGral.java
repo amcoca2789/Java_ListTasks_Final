@@ -25,5 +25,6 @@ public class ConstanteGral {
 	public static final String ESTADO_EN_DESARROLLO = "EN DESARROLLO";
 	public static final String ESTADO_CONCLUIDO = "CONCLUIDO";
 	public static final String CADENA_NUMERO_CERO = "0";
+	public static final String ESTADO_ARCHIVADA = "ARCHIVADA";
 
 }

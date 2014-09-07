@@ -610,14 +610,17 @@
   }
 }
 /*Gestion Tarea*/
+.calendario {
+  text-align: center;
+}
 .calendario-dia {
   border: 1px solid #fff;
   -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
   display: inline-block;
-  padding: 5px;
+  padding: 3px;
   vertical-align: top;
-  width: 13%;
+  width: 13.1%;
 }
 .calendario-dia-detalle {
   background-color: #006ddb;
@@ -661,7 +664,7 @@
   border-radius: 0.5em;
   display: block;
   margin: 5px;
-  padding: 10px;
+  padding: 3px;
 }
 .calendario-dia-tarea-contenedor {
   display: block;
@@ -743,7 +746,7 @@
 .calendario-dia-tarea-edicion-lista {
   list-style: none;
   list-style-position: inside;
-  margin: 10px;
+  margin: 5px 0 5px 0;
   padding: 0;
   text-align: center;
 }

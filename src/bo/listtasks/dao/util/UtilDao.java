@@ -334,10 +334,9 @@ public class UtilDao extends ConfiguracionDB {
 			if (nroColumnas == nroDatos) {
 				for (int i = 0; i < nombreColumnasSet.length; i++) {
 					datosSetCadena.append(nombreColumnasSet[i]);
-					datosSetCadena.append("=");
+					datosSetCadena.append(" = ");
 					datosSetCadena.append(datosSet[i]);
-					if (nombreColumnasSet.length > 1
-							&& i == nombreColumnasSet.length - 1) {
+					if (i != nombreColumnasSet.length - 1) {
 						datosSetCadena.append(" , ");
 					}
 				}

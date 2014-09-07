@@ -80,7 +80,6 @@ public class TareaDao {
 					String queryInsert = UtilBO.cambioValores(queryDefault,
 							datos);
 
-
 					PreparedStatement ps = null;
 
 					try {
@@ -278,9 +277,10 @@ public class TareaDao {
 					/** Where */
 					String[] nombresColumnasCondicion = { ConstanteTarea.IDTAREA };
 					String[] datosCondicion = { idTareaStr };
-					String whereUpdate = utilDao.construirWhere(
-							nombresColumnasCondicion, datosCondicion,
-							ConstanteGral.OPERADOR_AND);
+					String[] tipoDatosWhere = { ConstanteGral.TIPO_NUMBER };
+					String[] datosCondicionConvertidos = utilBo
+							.convertirDatosADatosSQL(tipoDatosWhere,
+									datosCondicion);
 					/** setUpdate */
 					String[] nombreColumnasActualizar = {
 							ConstanteTarea.DESCRIPCION,
@@ -290,16 +290,25 @@ public class TareaDao {
 							ConstanteGral.TIPO_DATE };
 					String[] datosToActualizar = { descripcionTarea,
 							fechaRealizacionStr };
-					System.out.println("datosToActualizar:"
-							+ Arrays.toString(datosToActualizar));
 					String[] datosToActualizarConvertidos = utilBo
 							.convertirDatosADatosSQL(tiposColumnasActualizar,
 									datosToActualizar);
+					/** Where */
+					System.out.println("datosCondicionConvertidos:"
+							+ Arrays.toString(datosCondicionConvertidos));
+					String whereUpdate = utilDao.construirWhere(
+							nombresColumnasCondicion,
+							datosCondicionConvertidos,
+							ConstanteGral.OPERADOR_AND);
+					System.out.println("whereUpdate:" + whereUpdate);
+					/** setUpdate */
 					System.out.println("datosToActualizarConvertidos:"
 							+ Arrays.toString(datosToActualizarConvertidos));
 					String setUpdate = utilDao.construirSetUpdate(
 							nombreColumnasActualizar,
 							datosToActualizarConvertidos);
+					System.out.println("setUpdate:" + setUpdate);
+					
 					/** datosUpdateTarea */
 					String[] datosUpdateTarea = { nombreEsquemaDB, nombreTabla,
 							setUpdate, whereUpdate };
@@ -367,7 +376,7 @@ public class TareaDao {
 				// "********SET************"
 				System.out.println("********SET************");
 				String[] nombreColumnasSet = { ConstanteTarea.ESTADOTAREA };
-				String[] datosSet = { ConstanteGral.ESTADO_CONCLUIDO };
+				String[] datosSet = { estado };
 				String[] tipoDatosSet = { ConstanteGral.TIPO_VARCHAR2 };
 				String[] datosSetConvertidos = utilBo.convertirDatosADatosSQL(
 						tipoDatosSet, datosSet);

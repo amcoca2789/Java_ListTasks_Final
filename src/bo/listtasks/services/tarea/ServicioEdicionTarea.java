@@ -54,8 +54,8 @@ public class ServicioEdicionTarea extends HttpServlet {
 			String idUsuario = String.valueOf(sess
 					.getAttribute(ConstanteUsuario.IDUSUARIO));
 
-			String nroDiaStr = request.getParameter("caja_nro_dia");
-			String nroTareaStr = request.getParameter("caja_nro_tarea");
+			String nroDiaStr = request.getParameter("caja-nro-dia");
+			String nroTareaStr = request.getParameter("caja-nro-tarea");
 
 			int idTarea = -1;
 			String descripcionTarea = null;
@@ -67,7 +67,7 @@ public class ServicioEdicionTarea extends HttpServlet {
 				String diaX = "dia" + nroDia;
 				String tareaY = "tarea" + nroTarea;
 				String diaXtareaY = diaX + "-" + tareaY;
-				String idCajaEdicionIdTarea = "caja_idtarea_edicion-"
+				String idCajaEdicionIdTarea = "caja-nro-idtarea-edicion-"
 						+ diaXtareaY;
 				String idCajaEdicionDescripcionTarea = "caja_descripcion_edicion-"
 						+ diaXtareaY;
@@ -79,43 +79,47 @@ public class ServicioEdicionTarea extends HttpServlet {
 						.getParameter(idCajaEdicionDescripcionTarea);
 				fechaRealizacionStr = request
 						.getParameter(idCajaEdicionFechRealTarea);
+
+				UtilBO utilBo = new UtilBO();
+
+				try {
+					Calendar fechaRealizacionTarea = utilBo
+							.convertStringToCalendar(fechaRealizacionStr);
+
+					if (idTareaStr != null) {
+						idTarea = Integer.parseInt(idTareaStr);
+					}
+
+					Tarea t = new Tarea();
+					t.setIdTarea(idTarea);
+					t.setDescripcionTarea(descripcionTarea);
+					t.setFechaRealizacionTarea(fechaRealizacionTarea);
+					t.setIdUsuario(Integer.parseInt(idUsuario));
+					t.setEstadoTarea(ConstanteGral.ESTADO_EN_DESARROLLO);
+
+					System.out.println("TAREA:" + t);
+
+					TareaDao tDao = new TareaDao();
+					boolean isEditado = tDao.edicionTarea(t);
+
+					if (!isEditado) {
+						System.out.println("No se edito la tarea");
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					String url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
+					RequestDispatcher dispatcher = request
+							.getRequestDispatcher(url_destino);
+					dispatcher.forward(request, response);
+				}
+			} else {
+				System.out.println("nroDia o nroTarea es nula o vacia");
 			}
 
-			UtilBO utilBo = new UtilBO();
-
-			try {
-				Calendar fechaRealizacionTarea = utilBo
-						.convertStringToCalendar(fechaRealizacionStr);
-
-				if (idTareaStr != null) {
-					idTarea = Integer.parseInt(idTareaStr);
-				}
-
-				Tarea t = new Tarea();
-				t.setIdTarea(idTarea);
-				t.setDescripcionTarea(descripcionTarea);
-				t.setFechaRealizacionTarea(fechaRealizacionTarea);
-				t.setIdUsuario(Integer.parseInt(idUsuario));
-				t.setEstadoTarea(ConstanteGral.ESTADO_EN_DESARROLLO);
-
-				System.out.println("TAREA:" + t);
-
-				TareaDao tDao = new TareaDao();
-				boolean isEditado = tDao.edicionTarea(t);
-
-				if (!isEditado) {
-					System.out.println("No se edito la tarea");
-				}
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				String url_destino = ConstantesRutasServlet.RUTA_GESTION_TAREA;
-				RequestDispatcher dispatcher = request
-						.getRequestDispatcher(url_destino);
-				dispatcher.forward(request, response);
-			}
-
+		} else {
+			System.out.println("Sesion nula");
 		}
 
 	}

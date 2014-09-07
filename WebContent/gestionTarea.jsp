@@ -24,7 +24,6 @@
    String idSesionUsuario = ConstanteGral.SIN_DATOS;
    boolean isCorrectaSesion = false;
 	String msg = "Lista vacia";
-	int nroTarea = 1;
    
    if (sesionUsuario != null) {
    	isCorrectaSesion = this.inicioSesion(sesionUsuario);
@@ -159,9 +158,6 @@
                     <p class="calendario-dia-detalle-fecha u-parrafo">[<%=fechaDia %>]</p>
                 </div>
                 <%
-				if(listaTareas==null || listaTareas.isEmpty()){
-					System.out.println("Lista Tareas vacia o nula");
-				}else{
 					List<Tarea> listaTareasFiltradas = tareaDao.filtrarTareasPorFecha(listaTareas, fechaFiltro);
 					
 					if(listaTareasFiltradas==null || listaTareasFiltradas.isEmpty()){
@@ -173,6 +169,7 @@
 					}else{
 				%>
 				<%
+					int nroTarea = 1;
 					for(Tarea tarea: listaTareasFiltradas){
 				%>
                 <!-- ************************* [INICIO] Plantilla Tarea *********************** -->
@@ -211,9 +208,9 @@
                         <input name="caja-nro-tarea" id="caja-nro-tarea" value="<%=nroTarea %>" type="hidden" />
                         <input name="caja-nro-idtarea-edicion-<%=diaXtareaY%>" id="caja-nro-idtarea-edicion-<%=diaXtareaY%>" value="<%=idDiaXTareaY %>" type="hidden" />
                         <label class="calendario-dia-tarea-edicion-label u-label" for="formulario-editada-<%=diaXtareaY%>">Descripcion:</label>
-                        <input class="calendario-dia-tarea-edicion-input u-input" name="caja_descripcion_edicion-<%=diaXtareaY%>" id="caja_descripcion_edicion-<%=diaXtareaY%>" value="" type="text" />
+                        <input class="calendario-dia-tarea-edicion-input u-input" name="caja_descripcion_edicion-<%=diaXtareaY%>" id="caja_descripcion_edicion-<%=diaXtareaY%>" value="<%=descripcionTarea %>" type="text" />
                         <label class="calendario-dia-tarea-edicion-label u-label" for="formulario-editada-<%=diaXtareaY%>">Fecha Realizacion:</label>
-                        <input class="calendario-dia-tarea-edicion-input u-input u-fecha" name="caja_fecharealizacion_edicion-<%=diaXtareaY%>" id="caja_fecharealizacion_edicion-<%=diaXtareaY%>" value="" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
+                        <input class="calendario-dia-tarea-edicion-input u-input u-fecha" name="caja_fecharealizacion_edicion-<%=diaXtareaY%>" id="caja_fecharealizacion_edicion-<%=diaXtareaY%>" value="<%=fechaRealizacionTareaStr %>" placeholder="YYYY-mm-dd HH:mm:ss" type="text" />
                         <ul class="calendario-dia-tarea-edicion-lista">
                             <li class="calendario-dia-tarea-edicion-lista-item">
                                 <button class="calendario-dia-tarea-edicion-lista-item-boton u-boton" id="btn-guardar-<%=diaXtareaY%>" type="submit">Guardar</button>
@@ -229,9 +226,9 @@
                 </div>
                 <!-- ************************* [FIN] Plantilla Tarea *********************** -->
                 <%
+                			nroTarea++;
 							}//fin for tareafiltradas
 						}//fin else tareafiltradas
-					}//fin else listatarea
                 %>
             </div>
             <!-- ************************* [FIN] Plantilla DIA *********************** -->
